@@ -20,6 +20,7 @@ routes.put('/login', AccountsHandler.loginHandler);
 
 // Rotas de eventos
 routes.get('/addNewEvent', EventsHandler.addNewEventHandler);
+routes.get('/getEvents', EventsHandler.getEventsHandler);
 
 server.use(routes);
 

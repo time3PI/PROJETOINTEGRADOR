@@ -124,7 +124,7 @@ export namespace AccountsHandler {
             } else {
                 await conn.execute(
                     `INSERT INTO usuarios (id, email, senha, nome, data_nasc, isAdmin) 
-                    VALUES (seq_id.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'), 0)`,
+                    VALUES (seq_id_user.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'), 0)`,
                     {
                         email: email,
                         senha: senha,

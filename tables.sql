@@ -6,7 +6,7 @@ create table usuarios(
     data_nasc date not null,
     isAdmin number(1) not null
 );
-CREATE SEQUENCE SEQ_ID_
+CREATE SEQUENCE SEQ_ID_USER
     START WITH 1       
     INCREMENT BY 1     
     MAXVALUE 10000;
@@ -17,10 +17,10 @@ create table eventos(
     titulo varchar2(100) not null,
     descricao varchar2(500) not null,
     data_inicio date not null,
-    data_hora_inicio_apostas date not null,
-    data_hora_fim_apostas date not null,
+    data_hora_inicio_apostas TIMESTAMP not null,
+    data_hora_fim_apostas TIMESTAMP not null,
     valor_apostas_totais DECIMAL(15, 2) NOT NULL,
-    isActive number(1) not null,
+    isActive number(1),
     isApproved number(1) not null,
     id_usuarios_fk integer
     );
@@ -29,6 +29,19 @@ CREATE SEQUENCE SEQ_ID_EVENTOS
     START WITH 1       
     INCREMENT BY 1     
     MAXVALUE 10000;
+
+--COMANDO PARA VER SE O EVENTO ESTA ATIVO(se a data de aposta ja começou ou se ja terminou)
+CREATE OR REPLACE TRIGGER trg_set_isActive
+BEFORE INSERT OR UPDATE ON eventos
+FOR EACH ROW
+BEGIN
+    IF SYSDATE BETWEEN :NEW.data_hora_inicio_apostas AND :NEW.data_hora_fim_apostas THEN
+        :NEW.isActive := 1;
+    ELSE
+        :NEW.isActive := 0;
+    END IF;
+END;
+/
 
 -- comando sobre a tabela apostas
 create table apostas(
@@ -78,5 +91,5 @@ CREATE SEQUENCE SEQ_ID_APROVACOES
 
 -- SELECTS copia e cola
 select * from usuarios;
--
+select * from EVENTOS;
 select * from apostas;
