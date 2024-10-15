@@ -34,7 +34,6 @@ export namespace AccountsHandler {
         dataNasc:string;
         
     };
-    //estudar dot env
 
     async function VerificaLogin(email:string, senha:string): Promise<boolean | undefined >{
         //passo a passo
@@ -67,7 +66,7 @@ export namespace AccountsHandler {
                 return true;
             } else {
 
-                return undefined; 
+                return false; 
             }
 
         } catch (err) {
@@ -87,7 +86,7 @@ export namespace AccountsHandler {
         if(pEmail && pSenha){
             const authData = await VerificaLogin(pEmail, pSenha);
 
-            if (authData !== undefined) {
+            if (authData !== undefined && authData !== false)  {
                 res.status(200).send("Login realizado com sucesso!");
             } else {
                 res.status(400).send('Credenciais inválidas');
@@ -124,8 +123,8 @@ export namespace AccountsHandler {
                 return false; 
             } else {
                 await conn.execute(
-                    `INSERT INTO usuarios (id, email, senha, nome, data_nasc) 
-                    VALUES (SEQUSERID.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'))`,
+                    `INSERT INTO usuarios (id, email, senha, nome, data_nasc, isAdmin) 
+                    VALUES (seq_id.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'), 0)`,
                     {
                         email: email,
                         senha: senha,
@@ -148,7 +147,7 @@ export namespace AccountsHandler {
     }
 
     export const signUpHandler: RequestHandler = async (req: Request, res: Response) => {
-        // Passo 1 - Receber os parametros para criar a conta
+        
         const pNome = req.get('nome');
         const pEmail = req.get('email');
         const pSenha = req.get('senha');
@@ -156,16 +155,16 @@ export namespace AccountsHandler {
         
         
 
-        if(pNome && pEmail && pSenha && pDataNasc ){
+        if(pNome && pEmail && pSenha && pDataNasc){
             const authData = await InserirUser(pNome, pEmail, pSenha, pDataNasc);
 
-            if ( authData !== undefined || false){
+            if ( authData !== undefined && authData !== false) {
 
                 res.status(200).send(`Nova conta adicionada com sucesso!`);
             
             }else{
                 
-                res.status(400).send("Falha ao inserir dados no sistema");
+                res.status(500).send("Falha ao inserir dados no sistema");
             }
         }else{
             

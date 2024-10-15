@@ -1,6 +1,7 @@
 import express from "express";
 import {Request, Response, Router} from "express";
 import { AccountsHandler } from "./accounts/accounts";
+import { EventsHandler } from "./events/events";
 
 const port = 3000; 
 const server = express();
@@ -13,12 +14,15 @@ routes.get('/', (req: Request, res: Response)=>{
     res.send('Acesso não permitido.');
 });
 
-// vamos organizar as rotas em outro local 
+// Rotas de usuarios
 routes.get('/signUp', AccountsHandler.signUpHandler);
 routes.put('/login', AccountsHandler.loginHandler);
+
+// Rotas de eventos
+routes.get('/addNewEvent', EventsHandler.addNewEventHandler);
 
 server.use(routes);
 
 server.listen(port, ()=>{
-    console.log(`Server is running on: ${port}`);
+    console.log(`Servidor no ar na porta: ${port}`);
 })
