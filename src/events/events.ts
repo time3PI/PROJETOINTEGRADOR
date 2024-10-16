@@ -1,15 +1,14 @@
-import { pseudoRandomBytes } from "crypto";
 import {Request, RequestHandler, Response} from "express";
 import OracleDB, { poolIncrement } from "oracledb"
-import { ppid } from "process";
-import { PassThrough } from "stream";
+import dotenv from 'dotenv'; 
+dotenv.config();
 
 async function conexaoBD(){
     try {
         let conn = await OracleDB.getConnection({
-            user: "BD130824216",
-            password: "Wqczx3",
-            connectString: "172.16.12.14/xe"
+            user: process.env.ORACLE_USER,
+            password: process.env.ORACLE_PASSWORD,
+            connectString: process.env.ORACLE_CONN_STR
         });
         return conn;
     } catch (err) {

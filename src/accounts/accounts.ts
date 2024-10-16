@@ -1,18 +1,15 @@
-import { pseudoRandomBytes } from "crypto";
 import {Request, RequestHandler, Response} from "express";
 import OracleDB, { poolIncrement } from "oracledb"
-import { ppid } from "process";
-import { PassThrough } from "stream";
+import dotenv from 'dotenv'; 
+dotenv.config();
 
-/*
-    Nampespace que contém tudo sobre "contas de usuários"
-*/
+
 async function conexaoBD(){
     try {
         let conn = await OracleDB.getConnection({
-            user: "BD130824216",
-            password: "Wqczx3",
-            connectString: "172.16.12.14/xe"
+            user: process.env.ORACLE_USER,
+            password: process.env.ORACLE_PASSWORD,
+            connectString: process.env.ORACLE_CONN_STR
         });
         return conn;
     } catch (err) {
@@ -123,8 +120,8 @@ export namespace AccountsHandler {
                 return false; 
             } else {
                 await conn.execute(
-                    `INSERT INTO usuarios (id, email, senha, nome, data_nasc, isAdmin) 
-                    VALUES (seq_id_user.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'), 0)`,
+                    `INSERT INTO usuarios (id, email, senha, nome, data_nasc, isAdmin, token) 
+                    VALUES (seq_id_user.NEXTVAL, :email, :senha, :nome, TO_DATE(:dataNascimento, 'DD/MM/YYYY'), 0, dbms_random.string('x',10))`,
                     {
                         email: email,
                         senha: senha,
