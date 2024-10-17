@@ -71,7 +71,8 @@ CREATE SEQUENCE SEQ_ID_APOSTAS
 create table  aprovacoes(
     id integer primary key,
     id_usuarios_fk integer,
-    id_eventos_fk integer
+    id_eventos_fk integer,
+    
 );
 
 ALTER TABLE aprovacoes

@@ -4,6 +4,7 @@ import session from 'express-session';
 import dotenv from 'dotenv'; 
 
 import { conexaoBD } from "../conexaoBD";
+import { log } from "console";
 
 dotenv.config();
 
@@ -13,15 +14,11 @@ export namespace AccountsHandler {
      * Tipo UserAccount
      */
     export type UserAccount = {
-        id:number|undefined;
-        name:string;
-        email:string;
-        senha:string;
-        dataNasc:string;
-        
+        token : string|undefined;
+        isAdmin : boolean | undefined;   
     };
 
-    async function VerificaLogin(email:string, senha:string): Promise<string | undefined >{
+    async function VerificaLogin(email:string, senha:string): Promise< UserAccount[] | undefined >{
         //passo a passo
         //conectar nobanco
         //fazer select pra verifiar a conta
@@ -37,7 +34,7 @@ export namespace AccountsHandler {
 
         try {
             const result = await conn.execute(
-                `SELECT token
+                `SELECT token, isAdmin
                 FROM usuarios
                 where email = :email and senha = :senha`,
                 [email, senha]
@@ -45,11 +42,14 @@ export namespace AccountsHandler {
             
             console.dir(result, {depth: null});
 
-            const rows = result.rows as Array<[string]>; 
+            const rows = result.rows as Array<[string, number]>; 
 
             if (rows && rows.length > 0) {
-                const token = rows[0][0]; 
-                return token; 
+                let tokenIsAdmin = rows[0];
+                return [{
+                    token: tokenIsAdmin[0], 
+                    isAdmin: tokenIsAdmin[1] === 1
+                }];
             } else {
                 return undefined;
             }
@@ -70,10 +70,12 @@ export namespace AccountsHandler {
         const pEmail = req.get('email');
         const pSenha = req.get('senha');
         if(pEmail && pSenha){
-            const authData = await VerificaLogin(pEmail, pSenha);
+            let authData : UserAccount[] | undefined = []
+            authData = await VerificaLogin(pEmail, pSenha);
 
             if (authData !== undefined && authData !== null)  {
-                req.session.token = authData
+                req.session.token = authData[0].token
+                req.session.isAdmin = authData[0].isAdmin
                 res.status(200).send("Login realizado com sucesso!");
             } else {
                 res.status(400).send('Credenciais inválidas');

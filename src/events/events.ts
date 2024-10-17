@@ -3,9 +3,7 @@ import OracleDB, { poolIncrement } from "oracledb"
 import session from 'express-session';
 import dotenv from 'dotenv'; 
 
-
 import { conexaoBD } from "../conexaoBD";
-import { Tracing } from "trace_events";
 
 dotenv.config();
 
