@@ -1,22 +1,11 @@
 import {Request, RequestHandler, Response} from "express";
 import OracleDB, { poolIncrement } from "oracledb"
+import session from 'express-session';
 import dotenv from 'dotenv'; 
+
+import { conexaoBD } from "../conexaoBD";
+
 dotenv.config();
-
-
-async function conexaoBD(){
-    try {
-        let conn = await OracleDB.getConnection({
-            user: process.env.ORACLE_USER,
-            password: process.env.ORACLE_PASSWORD,
-            connectString: process.env.ORACLE_CONN_STR
-        });
-        return conn;
-    } catch (err) {
-        console.error('Erro ao conectar:', err);
-        return undefined;
-    }
-}
 
 export namespace AccountsHandler {
     
@@ -32,7 +21,7 @@ export namespace AccountsHandler {
         
     };
 
-    async function VerificaLogin(email:string, senha:string): Promise<boolean | undefined >{
+    async function VerificaLogin(email:string, senha:string): Promise<string | undefined >{
         //passo a passo
         //conectar nobanco
         //fazer select pra verifiar a conta
@@ -48,27 +37,27 @@ export namespace AccountsHandler {
 
         try {
             const result = await conn.execute(
-                `SELECT *
+                `SELECT token
                 FROM usuarios
                 where email = :email and senha = :senha`,
                 [email, senha]
             )
             
-            const linhas = result.rows;
-            
-            console.dir(linhas, {depth: null});
+            console.dir(result, {depth: null});
 
-            if (linhas && linhas.length > 0) {
+            const rows = result.rows as Array<[string]>; 
 
-                return true;
+            if (rows && rows.length > 0) {
+                const token = rows[0][0]; 
+                return token; 
             } else {
-
-                return false; 
+                return undefined;
             }
 
         } catch (err) {
 
             console.error('Erro ao executar login:', err);
+            await conn.rollback();
             return undefined;
 
         } finally {
@@ -76,14 +65,15 @@ export namespace AccountsHandler {
         }
 
     }
-
+    
     export const loginHandler: RequestHandler = async (req:Request, res:Response) =>{
         const pEmail = req.get('email');
         const pSenha = req.get('senha');
         if(pEmail && pSenha){
             const authData = await VerificaLogin(pEmail, pSenha);
 
-            if (authData !== undefined && authData !== false)  {
+            if (authData !== undefined && authData !== null)  {
+                req.session.token = authData
                 res.status(200).send("Login realizado com sucesso!");
             } else {
                 res.status(400).send('Credenciais inválidas');
@@ -136,6 +126,7 @@ export namespace AccountsHandler {
         } catch (err) {
 
             console.error('Erro ao cadastrar usuario: ', err);
+            await conn.rollback();
             return undefined;
 
         }finally {
@@ -149,8 +140,6 @@ export namespace AccountsHandler {
         const pEmail = req.get('email');
         const pSenha = req.get('senha');
         const pDataNasc = req.get('dataNasc');
-        
-        
 
         if(pNome && pEmail && pSenha && pDataNasc){
             const authData = await InserirUser(pNome, pEmail, pSenha, pDataNasc);
