@@ -1,7 +1,8 @@
 import {Request, RequestHandler, Response} from "express";
 import OracleDB, { poolIncrement } from "oracledb"
-import session from 'express-session';
 import dotenv from 'dotenv'; 
+import nodemailer from 'nodemailer';
+
 
 import { conexaoBD } from "../conexaoBD";
 
@@ -304,6 +305,78 @@ export namespace EventsHandler {
         }
     }
 
+    async function emailReprovacao(idEvento: string, textoReprovacao: string): Promise<boolean> {
+        let conn = await conexaoBD();
+    
+        if (!conn) {
+            console.error('Falha na conexão com o banco de dados.');
+            return false;
+        }
+    
+        try {
+            const IdUserTituloEventoResult = await conn.execute<any[]>(
+                `SELECT titulo, id_usuarios_fk
+                 FROM eventos
+                 WHERE id = :idEvento`,
+                {
+                    idEvento: idEvento,
+                }
+            );
+    
+            const rows = IdUserTituloEventoResult.rows as Array<[string, number]>;
+            if (!rows || rows.length === 0) {
+                console.error('Evento não encontrado.');
+                return false;
+            }
+    
+            const [titulo, idUserEvento] = rows[0];
+    
+            const emailUserResult = await conn.execute<any[]>(
+                `SELECT email
+                 FROM usuarios
+                 WHERE id = :idUserEvento`,
+                {
+                    idUserEvento: idUserEvento,
+                }
+            );
+            
+            console.dir(emailUserResult, { depth: null });
+            const linhas = emailUserResult.rows;
+            if (!linhas || linhas.length === 0) {
+                console.error('Email do usuário não encontrado.');
+                return false;
+            }
+    
+            const emailUser = linhas[0]?.[0];
+    
+            const emissor = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: 'time3projetointegrador@gmail.com',
+                    pass: 'alouka2024',
+                },
+            });
+    
+            const opEmail = {
+                from: 'time3projetointegrador@gmail.com',
+                to: emailUser,
+                subject: `Seu Evento ${titulo} foi Reprovado!`,
+                text: textoReprovacao,
+            };
+    
+            await emissor.sendMail(opEmail);
+    
+            return true;
+        } catch (err) {
+            console.error('Erro ao enviar email: ', err);
+            return false;
+        } finally {
+            await conn.close();
+        }
+    }
+    
+
+
     async function reprovarEvento(idEvento: string, textoReprovacao: string): Promise<boolean | undefined> {
         let conn = await conexaoBD();
     
@@ -313,36 +386,6 @@ export namespace EventsHandler {
         }
     
         try {
-            const IdUserEventoResult = await conn.execute<any[]>(
-                `select id_usuarios_fk
-                from eventos
-                WHERE id = :idEvento`,
-                {
-                    idEvento: idEvento,
-                }
-            );
-            
-            const IdUserEvento = IdUserEventoResult.rows?.[0]?.[0];
-            
-            if (!IdUserEvento) {
-                throw new Error('Usuário não encontrado para o evento fornecido.');
-            }
-            
-            const emailUserResult = await conn.execute<any[]>(
-                `select email
-                from usuarios
-                WHERE id = :idUserEvento`,
-                {
-                    idUserEvento: IdUserEvento,
-                }
-            );
-
-            const emailUser = emailUserResult.rows?.[0]?.[0];
-            
-            if (!emailUser) {
-                throw new Error('Email do usuário não encontrado.');
-            }
-
             await conn.execute(
                 `UPDATE eventos
                 SET status = 'suspenso'
@@ -351,10 +394,14 @@ export namespace EventsHandler {
                     idEvento: idEvento,
                 }
             );
-
-            await conn.commit()
-            return true;
-
+            if (await emailReprovacao(idEvento, textoReprovacao)) {
+                await conn.commit();
+                return true;
+            } else {
+                console.error('Falha ao enviar o email de reprovação.');
+                await conn.rollback();
+                return false;
+            }
         }catch (err) {
 
             console.error('Erro ao reprovar evento: ', err);
@@ -377,16 +424,16 @@ export namespace EventsHandler {
                 if(pOpcao === 'aprovar'){
                     const authData = await aprovarEvento(pIdEvento);
                     if (authData !== undefined){
-                        res.status(200).send('Tabela aprovada com sucesso!');
+                        res.status(200).send('Evento aprovado com sucesso!');
                     } else {
-                        res.status(500).send('Erro ao aprovar tabela');
+                        res.status(500).send('Erro ao aprovar evento');
                     }
                 }else{
                     const authData = await reprovarEvento(pIdEvento, pTextoReprovacao);
-                    if (authData !== undefined){
-                        res.status(200).send('Tabela reprovada com sucesso!');
+                    if (authData === true){
+                        res.status(200).send('Evento reprovado com sucesso!');
                     } else {
-                        res.status(500).send('Erro ao aprovar tabela');
+                        res.status(500).send('Erro ao reprovar evento');
                     }
                 }
             }else {
