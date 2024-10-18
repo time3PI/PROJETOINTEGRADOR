@@ -58,9 +58,9 @@ export namespace EventsHandler {
             const idUser = await tokenParaId(token);
 
             await conn.execute(
-                `INSERT INTO eventos (id, titulo, descricao, data_inicio, data_hora_inicio_apostas, data_hora_fim_apostas, valor_apostas_totais, isActive, isApproved, id_usuarios_fk) 
+                `INSERT INTO eventos (id, titulo, descricao, data_inicio, data_hora_inicio_apostas, data_hora_fim_apostas, id_usuarios_fk, status) 
                 VALUES (seq_id_eventos.NEXTVAL, :titulo, :descricao, TO_TIMESTAMP(:data_inicio, 'DD/MM/YYYY HH24:MI:SS'), 
-                TO_TIMESTAMP(:data_hora_inicio_apostas, 'DD/MM/YYYY HH24:MI:SS'), TO_TIMESTAMP(:data_hora_fim_apostas, 'DD/MM/YYYY HH24:MI:SS'), 0, null, 0, :idUser)`,
+                TO_TIMESTAMP(:data_hora_inicio_apostas, 'DD/MM/YYYY HH24:MI:SS'), TO_TIMESTAMP(:data_hora_fim_apostas, 'DD/MM/YYYY HH24:MI:SS'), :idUser, 'aguarda aprovação')`,
                 {
                     titulo: titulo,
                     descricao: desc,  
@@ -129,7 +129,7 @@ export namespace EventsHandler {
             const result = await conn.execute(
                 `SELECT *
                 FROM eventos
-                WHERE isActive = 1`
+                WHERE status = 'aprovado'`
             );
 
             const linhas: any[] | undefined = result.rows;
@@ -140,7 +140,7 @@ export namespace EventsHandler {
             const result = await conn.execute(
                 `SELECT *
                 FROM eventos
-                WHERE isActive = 0`
+                WHERE status = 'aguarda aprovação'`
             );
 
             const linhas: any[] | undefined = result.rows;
@@ -229,8 +229,8 @@ export namespace EventsHandler {
 
             await conn.execute(
                 `UPDATE eventos
-                SET isActive = 0
-                WHERE id = :idEvento AND isActive = 1 AND valor_apostas_totais = 0 AND isApproved = 0 AND id_usuarios_fk = :idUser`,
+                SET status = 'suspenso'
+                WHERE id = :idEvento AND id_usuarios_fk = :idUser AND status = 'aguarda aprovação'`,
                 {
                     idEvento: idEvento,
                     idUser: idUser,
@@ -265,13 +265,135 @@ export namespace EventsHandler {
             if (authData !== undefined){
                 res.status(200).send('Tabela deletada com sucesso!');
             } else {
-                res.status(400).send('Erro ao deletar tabela');
+                res.status(500).send('Erro ao deletar tabela');
             }
         }else {
             res.status(400).send('Faltando parametros')
         }
     }
+
+    async function aprovarEvento(idEvento: string): Promise<boolean | undefined> {
+        let conn = await conexaoBD();
     
+        if (!conn) {
+            console.error('Falha na conexão com o banco de dados.');
+            return undefined;
+        }
+    
+        try {
+            await conn.execute(
+                `UPDATE eventos
+                SET status = 'aprovado'
+                WHERE id = :idEvento AND status = 'aguarda aprovação'`,
+                {
+                    idEvento: idEvento,
+                }
+            );
+
+            await conn.commit()
+            return true;
+
+        }catch (err) {
+
+            console.error('Erro ao aprovar evento: ', err);
+            await conn.rollback();
+            return undefined;
+
+        }finally {
+            await conn.close();
+        }
+    }
+
+    async function reprovarEvento(idEvento: string, textoReprovacao: string): Promise<boolean | undefined> {
+        let conn = await conexaoBD();
+    
+        if (!conn) {
+            console.error('Falha na conexão com o banco de dados.');
+            return undefined;
+        }
+    
+        try {
+            const IdUserEventoResult = await conn.execute<any[]>(
+                `select id_usuarios_fk
+                from eventos
+                WHERE id = :idEvento`,
+                {
+                    idEvento: idEvento,
+                }
+            );
+            
+            const IdUserEvento = IdUserEventoResult.rows?.[0]?.[0];
+            
+            if (!IdUserEvento) {
+                throw new Error('Usuário não encontrado para o evento fornecido.');
+            }
+            
+            const emailUserResult = await conn.execute<any[]>(
+                `select email
+                from usuarios
+                WHERE id = :idUserEvento`,
+                {
+                    idUserEvento: IdUserEvento,
+                }
+            );
+
+            const emailUser = emailUserResult.rows?.[0]?.[0];
+            
+            if (!emailUser) {
+                throw new Error('Email do usuário não encontrado.');
+            }
+
+            await conn.execute(
+                `UPDATE eventos
+                SET status = 'suspenso'
+                WHERE id = :idEvento AND status = 'aguarda aprovação'`,
+                {
+                    idEvento: idEvento,
+                }
+            );
+
+            await conn.commit()
+            return true;
+
+        }catch (err) {
+
+            console.error('Erro ao reprovar evento: ', err);
+            await conn.rollback();
+            return undefined;
+
+        }finally {
+            await conn.close();
+        }
+    }
+
+    export const evaluateNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
+        const pIdEvento = req.get('idEvento');
+        const pTextoReprovacao = req.get('textoReprovacao');
+        const pOpcao = req.get('opcao');
+        const isAdmin = req.session.isAdmin;
+
+        if(isAdmin){
+            if(pIdEvento && pTextoReprovacao){
+                if(pOpcao === 'aprovar'){
+                    const authData = await aprovarEvento(pIdEvento);
+                    if (authData !== undefined){
+                        res.status(200).send('Tabela aprovada com sucesso!');
+                    } else {
+                        res.status(500).send('Erro ao aprovar tabela');
+                    }
+                }else{
+                    const authData = await reprovarEvento(pIdEvento, pTextoReprovacao);
+                    if (authData !== undefined){
+                        res.status(200).send('Tabela reprovada com sucesso!');
+                    } else {
+                        res.status(500).send('Erro ao aprovar tabela');
+                    }
+                }
+            }else {
+                res.status(400).send('Faltando parametros')
+            }
+        }else{
+            res.status(400).send('Necessario ser moderador para realizar essa ação!')
+        }
+    }
 }
-
-

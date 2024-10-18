@@ -39,6 +39,7 @@ routes.put('/login', AccountsHandler.loginHandler);
 routes.get('/addNewEvent', EventsHandler.addNewEventHandler);
 routes.get('/getEvents', EventsHandler.getEventsHandler);
 routes.get('/deleteEvent', EventsHandler.deleteEventHandler);
+routes.get('/evaluateNewEvent', EventsHandler.evaluateNewEventHandler);
 
 server.use(routes);
 

@@ -19,10 +19,8 @@ create table eventos(
     data_inicio date not null,
     data_hora_inicio_apostas TIMESTAMP not null,
     data_hora_fim_apostas TIMESTAMP not null,
-    valor_apostas_totais DECIMAL(15, 2) NOT NULL,
-    isActive number(1),
-    isApproved number(1) not null,
-    id_usuarios_fk integer
+    id_usuarios_fk integer,
+    status VARCHAR2(20) CHECK (status IN ('aguarda aprovação', 'suspenso', 'aprovado')) NOT NULL
     );
 
 CREATE SEQUENCE SEQ_ID_EVENTOS
@@ -30,18 +28,6 @@ CREATE SEQUENCE SEQ_ID_EVENTOS
     INCREMENT BY 1     
     MAXVALUE 10000;
 
---COMANDO PARA VER SE O EVENTO ESTA ATIVO(se a data de aposta ja começou ou se ja terminou)
-CREATE OR REPLACE TRIGGER trg_set_isActive
-BEFORE INSERT OR UPDATE ON eventos
-FOR EACH ROW
-BEGIN
-    IF SYSDATE BETWEEN :NEW.data_hora_inicio_apostas AND :NEW.data_hora_fim_apostas THEN
-        :NEW.isActive := 1;
-    ELSE
-        :NEW.isActive := 0;
-    END IF;
-END;
-/
 
 -- comando sobre a tabela apostas
 create table apostas(
@@ -66,29 +52,6 @@ CREATE SEQUENCE SEQ_ID_APOSTAS
     START WITH 1       
     INCREMENT BY 1     
     MAXVALUE 10000;
-
---comandos sobre a tabela aprovacoes
-create table  aprovacoes(
-    id integer primary key,
-    id_usuarios_fk integer,
-    id_eventos_fk integer,
-    
-);
-
-ALTER TABLE aprovacoes
-ADD CONSTRAINT fk_usuario_aprovacoes
-FOREIGN KEY (id_usuarios_fk)
-REFERENCES usuarios (id);
-
-ALTER TABLE aprovacoes
-ADD CONSTRAINT fk_eventos_aprovacoes
-FOREIGN KEY (id_eventos_fk)
-REFERENCES eventos (id);
-
-CREATE SEQUENCE SEQ_ID_APROVACOES
-    START WITH 1       
-    INCREMENT BY 1     
-    MAXVALUE 10000;  
 
 -- SELECTS copia e cola
 select * from usuarios;
