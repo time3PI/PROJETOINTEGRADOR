@@ -350,15 +350,19 @@ export namespace EventsHandler {
             const emailUser = linhas[0]?.[0];
     
             const emissor = nodemailer.createTransport({
-                service: 'Gmail',
+                host: 'smtp.umbler.com',
+                port: 587,
+                secure: false,
                 auth: {
-                    user: 'time3projetointegrador@gmail.com',
-                    pass: 'alouka2024',
+                    user: 'contato@time3.projetointegrador.com',
+                    pass: '!Alouka_alouka2024',
                 },
+                logger: true, 
+                debug: true 
             });
     
             const opEmail = {
-                from: 'time3projetointegrador@gmail.com',
+                from: 'contato@time3.projetointegrador.com',
                 to: emailUser,
                 subject: `Seu Evento ${titulo} foi Reprovado!`,
                 text: textoReprovacao,
