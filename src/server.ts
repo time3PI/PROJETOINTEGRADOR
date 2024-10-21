@@ -7,6 +7,8 @@ import { getEventsHandler } from "./eventos/getEvents";
 import { deleteEventsHandler } from "./eventos/deleteEvents";
 import { evalueateEventsHandler } from "./eventos/evalueateEvents";
 import { addFundsHandler } from "./carteira/addFunds";
+import { withdrawFundsHandler } from "./carteira/withdrawFunds";
+import { betOnEventHandler } from "./apostas/betOnEvent";
 import session from 'express-session';
 
 const port = 3000; 
@@ -46,6 +48,8 @@ routes.get('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
 
 //rotas de carteiras
 routes.get('/addFunds', addFundsHandler.addFundsHandler);
+routes.get('/withdrawFunds', withdrawFundsHandler.withdrawFundsHandler);
+routes.get('/betOnEvent', betOnEventHandler.betOnEventHandler);
 
 server.use(routes);
 
