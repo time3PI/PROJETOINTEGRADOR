@@ -8,8 +8,7 @@ create table usuarios(
 );
 CREATE SEQUENCE SEQ_ID_USER
     START WITH 1       
-    INCREMENT BY 1     
-    MAXVALUE 10000;
+    INCREMENT BY 1;
 
 -- COMANDOS SOBRE A TABELA EVENTOS
 create table eventos(
@@ -25,8 +24,7 @@ create table eventos(
 
 CREATE SEQUENCE SEQ_ID_EVENTOS
     START WITH 1       
-    INCREMENT BY 1     
-    MAXVALUE 10000;
+    INCREMENT BY 1;
 
 
 -- comando sobre a tabela apostas
@@ -50,10 +48,43 @@ REFERENCES eventos (id);
 
 CREATE SEQUENCE SEQ_ID_APOSTAS
     START WITH 1       
-    INCREMENT BY 1     
-    MAXVALUE 10000;
+    INCREMENT BY 1;
 
+-- comando sobre a tabela carteira
+create table carteira(
+    id integer primary key,
+    valor_total integer,
+    id_usuarios_fk integer
+);
+
+ALTER TABLE carteira
+ADD CONSTRAINT fk_usuario_carteria
+FOREIGN KEY (id_usuarios_fk)
+REFERENCES usuarios (id);
+
+CREATE SEQUENCE SEQ_ID_CARTEIRA
+    START WITH 1       
+    INCREMENT BY 1;
+
+-- comando sobre a tabela transacoes
+create table transacoes(
+    id integer primary key,
+    valor_total integer not null,
+    data_transacao date not null,
+    tipo varchar2(20) CHECK (tipo IN ('apostado', 'sacado', 'adicionado', 'dividendo')) NOT NULL,
+    id_carteira_fk integer not null
+);
+
+ALTER TABLE transacoes
+ADD CONSTRAINT fk_carteira_transacoes
+FOREIGN KEY (id_carteira_fk)
+REFERENCES carteira (id);
+
+CREATE SEQUENCE SEQ_ID_TRANSACOES
+    START WITH 1       
+    INCREMENT BY 1;
 -- SELECTS copia e cola
 select * from usuarios;
 select * from EVENTOS;
+select * from carteira;
 select * from apostas;
