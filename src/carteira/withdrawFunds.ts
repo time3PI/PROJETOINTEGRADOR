@@ -52,8 +52,8 @@ export namespace withdrawFundsHandler {
         }
 
         try {
-            
             const idCarteira = Number(pIdCarteira);
+
             await conn.execute(
                 `INSERT INTO transacoes (id, valor_total, data_transacao, tipo, id_carteira_fk) 
                 VALUES (seq_id_transacoes.NEXTVAL, :valor, TO_DATE(SYSDATE, 'DD/MM/YYYY'), 'sacado', :idCarteira)`,
@@ -76,7 +76,7 @@ export namespace withdrawFundsHandler {
         }
     }
 
-    async function sacarValorCarteira(token: string, valor: string): Promise<boolean | undefined >{
+    async function sacarValorCarteira(token: string, pValor: string): Promise< boolean | undefined >{
        
         let conn = await conexaoBD();
 
@@ -87,33 +87,28 @@ export namespace withdrawFundsHandler {
 
         try {
 
-            const NumberValor = Number(valor);
+            const valor = Number(pValor);
             const idUser = await tokenParaId(token);
 
-            const result = await conn.execute<{ valor_atual: number }>(
-                `UPDATE carteira
-                SET valor_total = valor_total - :novo_valor
+            const selectValor = await conn.execute<any[]>(
+                `SELECT valor_total
+                FROM carteira
                 WHERE id_usuarios_fk = :idUser`,
                 {
-                    novo_valor: NumberValor,
-                    idUser: idUser,
-                    valor_atual: { type: OracleDB.NUMBER, dir: OracleDB.BIND_OUT }
+                    idUser: idUser
                 }
             );
+            
+            const pvalorAtual = selectValor.rows?.[0]?.[0];
+            const valorAtual = Number(pvalorAtual);
 
-            if (!result.outBinds || !result.outBinds.valor_atual) {
-                console.log("Erro ao obter o valor atualizado da carteira.");
+            if (valorAtual === undefined) {
+                console.error("Falha ao obter o saldo da carteira.");
+                return false;
+            }else if (valorAtual < 0 || valorAtual < valor) {
+                console.log("Não foi possível sacar, saldo insuficiente!");
                 return false;
             }
-
-            const valorAtualizado = result.outBinds.valor_atual;
-
-            if(valorAtualizado < 0){
-                console.log("Não foi possivel sacar, você nao possui saque suficiente para o saque!");
-                return false;
-            }
-
-            await conn.commit()
 
             const arrayId = await conn.execute<any[]>(
                 `SELECT id
@@ -122,12 +117,22 @@ export namespace withdrawFundsHandler {
                 {idUser: idUser}
             )
             
-            
             const idCarteira = arrayId.rows?.[0]?.[0];
             
-            console.dir(result.rows, {depth: null});
+            console.dir(arrayId.rows, {depth: null});
 
-            if(await registrarTransacao(idCarteira, NumberValor)){
+            await conn.execute<{ valor_atual: number }>(
+                `UPDATE carteira
+                SET valor_total = valor_total - :novo_valor
+                WHERE id_usuarios_fk = :idUser`,
+                {
+                    novo_valor: valor,
+                    idUser: idUser,
+                }
+            );
+
+            if(await registrarTransacao(idCarteira, valor)){
+                await conn.commit()
                 return true;
             }else {
                 console.error('Carteira não encontrada ou falha ao registrar a transação.');
@@ -147,9 +152,9 @@ export namespace withdrawFundsHandler {
 
     export const withdrawFundsHandler: RequestHandler = async (req: Request, res: Response) => {
 
-        const pAgenciaBancaria = req.get('Agencia bancaria');
-        const pNumConta = req.get('numero da conta');
-        const pTipoConta = req.get('tipo da conta');
+        const pAgenciaBancaria = req.get('agenciaBancaria');
+        const pNumConta = req.get('numeroConta');
+        const pTipoConta = req.get('tipoConta');
         const pValor = req.get('valor');
         const token = req.session.token
 
@@ -163,7 +168,7 @@ export namespace withdrawFundsHandler {
 
             if (authData !== undefined || authData !== false) {
 
-                res.status(200).send(`Novo fundos adicionados com sucesso!`);
+                res.status(200).send(`Dinheiro sacado com sucesso!`);
             
             }else{
                 

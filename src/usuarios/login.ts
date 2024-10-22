@@ -1,9 +1,6 @@
 import {Request, RequestHandler, Response} from "express";
-import dotenv from 'dotenv'; 
 
 import { conexaoBD } from "../conexaoBD";
-
-dotenv.config();
 
 export namespace LoginHandler {
     

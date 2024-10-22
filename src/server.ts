@@ -49,6 +49,8 @@ routes.get('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
 //rotas de carteiras
 routes.get('/addFunds', addFundsHandler.addFundsHandler);
 routes.get('/withdrawFunds', withdrawFundsHandler.withdrawFundsHandler);
+
+//rotas apostas
 routes.get('/betOnEvent', betOnEventHandler.betOnEventHandler);
 
 server.use(routes);
