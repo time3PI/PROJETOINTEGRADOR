@@ -55,33 +55,37 @@ export namespace betOnEventHandler {
 
         try {
 
-            const result = await conn.execute<{ valor_atual: number }>(
+            const result = await conn.execute<any[]>(
+                `SELECT valor_total
+                FROM carteira
+                WHERE id = :idCarteira`,
+                {
+                    idCarteira: idCarteira,
+                }
+            );
+
+            const rows = result.rows?.[0]?.[0];
+
+            if (rows < quant_cotas) {
+                console.log("Você nao possui saldo para apostar.");
+                return false;
+            }
+
+            await conn.execute(
                 `UPDATE carteira
                 SET valor_total = valor_total - :quant_cotas
                 WHERE id = :idCarteira`,
                 {
                     quant_cotas: quant_cotas,
                     idCarteira: idCarteira,
-                    valor_atual: { type: OracleDB.NUMBER, dir: OracleDB.BIND_OUT }
                 }
             );
 
-            if (!result.outBinds || !result.outBinds.valor_atual) {
-                console.log("Erro ao obter o valor atualizado da carteira.");
-                return false;
-            }
-
-            const valorAtualizado = result.outBinds.valor_atual;
-
-            if(valorAtualizado < 0){
-                console.log("Não foi possivel sacar, você nao possui saque suficiente para o saque!");
-                return false;
-            }
-
             await conn.commit()
+            return true
         }catch (err) {
 
-            console.error('Erro ao adicionar fundos: ', err);
+            console.error('Erro ao remover fundos: ', err);
             await conn.rollback();
             return undefined;
 
@@ -105,8 +109,21 @@ export namespace betOnEventHandler {
             const idEvento = Number(pIdEvento);
             const palpite = Number(pPalpite);
 
-
             const idUser = await tokenParaId(token);
+
+            const pStatusEvento = await conn.execute<any[]>(
+                `SELECT status
+                FROM eventos
+                WHERE id = :idEvento`,
+                {idEvento: idEvento}
+            );
+            
+            const statusEvento = pStatusEvento.rows?.[0]?.[0];
+
+            if (statusEvento !== 'aprovado') {
+                console.error("Evento não aprovado!");
+                return false;
+            }
 
             await conn.execute(
                 `INSERT INTO apostas (id, id_usuarios_fk, id_eventos_fk, quant_cotas, palpite) 
@@ -118,8 +135,6 @@ export namespace betOnEventHandler {
                     palpite:palpite
                 }
             );
-
-            await conn.commit()
 
             const arrayId = await conn.execute<any[]>(
                 `SELECT id
@@ -134,6 +149,7 @@ export namespace betOnEventHandler {
             console.dir(arrayId.rows, {depth: null});
 
             if(await retiraValorCarteira(idCarteira, quantCotas)){
+                await conn.commit()
                 return true;
             }else {
                 console.error('Carteira não encontrada ou falha ao registrar a transação.');
@@ -142,7 +158,7 @@ export namespace betOnEventHandler {
 
         }catch (err) {
 
-            console.error('Erro ao adicionar fundos: ', err);
+            console.error('Erro ao realizar aposta: ', err);
             await conn.rollback();
             return undefined;
 
@@ -168,7 +184,7 @@ export namespace betOnEventHandler {
 
             if (authData !== undefined || authData !== false) {
 
-                res.status(200).send(`Novo fundos adicionados com sucesso!`);
+                res.status(200).send(`Aposta realizada com sucesso!`);
             
             }else{
                 

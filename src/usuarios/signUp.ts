@@ -6,6 +6,7 @@ import { conexaoBD } from "../conexaoBD";
 dotenv.config();
 
 export namespace SignUpHandler {
+    
     async function criarCarteira(email: string): Promise<boolean | undefined >{
 
         let conn = await conexaoBD();

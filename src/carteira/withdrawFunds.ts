@@ -1,15 +1,11 @@
 import {Request, RequestHandler, Response} from "express";
-import OracleDB, { Connection, poolIncrement } from "oracledb"
-import dotenv from 'dotenv'; 
-
 
 import { conexaoBD } from "../conexaoBD";
-
-dotenv.config();
 
 export namespace withdrawFundsHandler {
 
     async function tokenParaId(token: string):  Promise<number | undefined >{
+        
         let conn = await conexaoBD();
 
         if (!conn) {
@@ -44,6 +40,7 @@ export namespace withdrawFundsHandler {
     }
 
     async function registrarTransacao(pIdCarteira: number, valor: number): Promise<boolean | undefined >{
+
         let conn = await conexaoBD();
 
         if (!conn) {
@@ -94,9 +91,7 @@ export namespace withdrawFundsHandler {
                 `SELECT valor_total
                 FROM carteira
                 WHERE id_usuarios_fk = :idUser`,
-                {
-                    idUser: idUser
-                }
+                {idUser: idUser}
             );
             
             const pvalorAtual = selectValor.rows?.[0]?.[0];
@@ -105,7 +100,7 @@ export namespace withdrawFundsHandler {
             if (valorAtual === undefined) {
                 console.error("Falha ao obter o saldo da carteira.");
                 return false;
-            }else if (valorAtual < 0 || valorAtual < valor) {
+            }else if (valorAtual <= 0 || valorAtual < valor) {
                 console.log("Não foi possível sacar, saldo insuficiente!");
                 return false;
             }
@@ -121,27 +116,29 @@ export namespace withdrawFundsHandler {
             
             console.dir(arrayId.rows, {depth: null});
 
-            await conn.execute<{ valor_atual: number }>(
+            await conn.execute(
                 `UPDATE carteira
                 SET valor_total = valor_total - :novo_valor
                 WHERE id_usuarios_fk = :idUser`,
                 {
                     novo_valor: valor,
-                    idUser: idUser,
+                    idUser: idUser
                 }
             );
 
             if(await registrarTransacao(idCarteira, valor)){
+
                 await conn.commit()
                 return true;
             }else {
+
                 console.error('Carteira não encontrada ou falha ao registrar a transação.');
                 return false; 
             }
 
         }catch (err) {
 
-            console.error('Erro ao adicionar fundos: ', err);
+            console.error('Erro ao sacar fundos: ', err);
             await conn.rollback();
             return undefined;
 

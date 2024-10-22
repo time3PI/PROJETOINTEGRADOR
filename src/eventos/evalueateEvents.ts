@@ -42,6 +42,7 @@ export namespace evalueateEventsHandler {
     }
 
     async function emailReprovacao(idEvento: string, textoReprovacao: string): Promise<boolean> {
+
         let conn = await conexaoBD();
 
         if (!conn) {
@@ -86,17 +87,15 @@ export namespace evalueateEventsHandler {
             const emailUser = linhas[0]?.[0];
 
             const emissor = nodemailer.createTransport({
-                host: 'smtp.umbler.com',
-                port: 587,
-                secure: false,
+                service: 'gmail',
                 auth: {
-                    user: 'process.env.EMAIL_AVISO',
+                    user: 'process.env.GMAIL_EMAIL',
                     pass: 'process.env.SENHA_EMAIL',
                 }
             });
 
             const opEmail = {
-                from: 'process.env.EMAIL_AVISO',
+                from: 'process.env.GMAIL_EMAIL',
                 to: emailUser,
                 subject: `Seu Evento ${titulo} foi Reprovado!`,
                 text: textoReprovacao,
@@ -158,7 +157,7 @@ export namespace evalueateEventsHandler {
         const isAdmin = req.session.isAdmin;
 
         if(isAdmin){
-            if(pIdEvento && pTextoReprovacao){
+            if(pIdEvento && pTextoReprovacao && pOpcao){
                 if(pOpcao === 'aprovar'){
                     const authData = await aprovarEvento(pIdEvento);
                     if (authData !== undefined){
@@ -166,13 +165,15 @@ export namespace evalueateEventsHandler {
                     } else {
                         res.status(500).send('Erro ao aprovar evento');
                     }
-                }else{
+                }else if(pOpcao === 'reprovar'){
                     const authData = await reprovarEvento(pIdEvento, pTextoReprovacao);
                     if (authData === true){
                         res.status(200).send('Evento reprovado com sucesso!');
                     } else {
                         res.status(500).send('Erro ao reprovar evento');
                     }
+                }else{
+                    res.status(400).send('opção invalida!')
                 }
             }else {
                 res.status(400).send('Faltando parametros')
