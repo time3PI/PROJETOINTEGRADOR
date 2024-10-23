@@ -10,12 +10,7 @@ export namespace LoginHandler {
     };
 
     async function VerificaLogin(email:string, senha:string): Promise< UserAccount[] | undefined >{
-        //passo a passo
-        //conectar nobanco
-        //fazer select pra verifiar a conta
-        //se existe preencher o objeto da conta
-        //se nao devolver undefined
-
+  
         let conn = await conexaoBD();
 
         if (!conn) {

@@ -89,7 +89,7 @@ export namespace addEventsHandler {
         const pDataInicio = req.get('data_inicio');
         const pDataHoraInicioApostas = req.get('data_hora_inicio_apostas');
         const pDataHoraFimApostas = req.get('data_hora_fim_apostas');
-        const token = req.session.token
+        const token = req.session.token;
 
         if(token === undefined || token === null){
             res.status(400).send("Necessario realizar Login para esta ação");

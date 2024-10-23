@@ -1,17 +1,12 @@
 import {Request, RequestHandler, Response} from "express";
 
 import { conexaoBD } from "../conexaoBD";
+import OracleDB from "oracledb";
 
 export namespace withdrawFundsHandler {
 
-    async function tokenParaId(token: string):  Promise<number | undefined >{
+    async function tokenParaId(token: string, conn:any):  Promise<number | undefined >{
         
-        let conn = await conexaoBD();
-
-        if (!conn) {
-            console.error('Falha na conexão com o banco de dados.');
-            return undefined;
-        }
 
         try {
             const result = await conn.execute(
@@ -34,19 +29,10 @@ export namespace withdrawFundsHandler {
         } catch (err) {
             console.error('Erro ao buscar id por token: ', err);
             return undefined;
-        } finally {
-            await conn.close();
         }
     }
 
-    async function registrarTransacao(pIdCarteira: number, valor: number): Promise<boolean | undefined >{
-
-        let conn = await conexaoBD();
-
-        if (!conn) {
-            console.error('Falha na conexão com o banco de dados.');
-            return undefined;
-        }
+    async function registrarTransacao(pIdCarteira: number, valor: number, conn: any): Promise<boolean | undefined >{
 
         try {
             const idCarteira = Number(pIdCarteira);
@@ -62,14 +48,13 @@ export namespace withdrawFundsHandler {
 
             await conn.commit()
             return true;
+
         }catch (err) {
 
             console.error('Erro ao registrar transação: ', err);
             await conn.rollback();
             return undefined;
 
-        }finally {
-            await conn.close();
         }
     }
 
@@ -85,22 +70,23 @@ export namespace withdrawFundsHandler {
         try {
 
             const valor = Number(pValor);
-            const idUser = await tokenParaId(token);
+            const idUser = await tokenParaId(token, conn);
 
-            const selectValor = await conn.execute<any[]>(
+            const selectSaldo = await conn.execute<any[]>(
                 `SELECT valor_total
                 FROM carteira
                 WHERE id_usuarios_fk = :idUser`,
                 {idUser: idUser}
             );
-            
-            const pvalorAtual = selectValor.rows?.[0]?.[0];
-            const valorAtual = Number(pvalorAtual);
 
-            if (valorAtual === undefined) {
+            const pSaldoAtual = selectSaldo.rows?.[0]?.[0];
+            const SaldoAtual = Number(pSaldoAtual);
+
+            console.log(SaldoAtual)
+            if (SaldoAtual === undefined) {
                 console.error("Falha ao obter o saldo da carteira.");
                 return false;
-            }else if (valorAtual <= 0 || valorAtual < valor) {
+            }else if (SaldoAtual <= 0 || SaldoAtual < valor) {
                 console.log("Não foi possível sacar, saldo insuficiente!");
                 return false;
             }
@@ -116,23 +102,25 @@ export namespace withdrawFundsHandler {
             
             console.dir(arrayId.rows, {depth: null});
 
+            const novo_valor:number = SaldoAtual - valor 
+            console.log(novo_valor)
             await conn.execute(
                 `UPDATE carteira
-                SET valor_total = valor_total - :novo_valor
+                SET valor_total = :novo_valor
                 WHERE id_usuarios_fk = :idUser`,
                 {
-                    novo_valor: valor,
+                    novo_valor: novo_valor,
                     idUser: idUser
                 }
             );
 
-            if(await registrarTransacao(idCarteira, valor)){
+            const transacaoRegistrada = await registrarTransacao(idCarteira, valor, conn);
 
-                await conn.commit()
+            if (transacaoRegistrada) {
+                await conn.commit();
                 return true;
-            }else {
-
-                console.error('Carteira não encontrada ou falha ao registrar a transação.');
+            } else {
+                console.error('Erro ao registrar a transação.'); 
                 return false; 
             }
 
