@@ -98,7 +98,7 @@ export namespace addFundsHandler {
                 }
             );
             
-            await conn.commit()
+            await conn.commit();
 
             const result = await conn.execute<any[]>(
                 `SELECT id

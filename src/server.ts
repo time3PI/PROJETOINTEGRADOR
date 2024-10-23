@@ -10,6 +10,7 @@ import { searchEventHandler } from "./eventos/searchEvent";
 import { addFundsHandler } from "./carteira/addFunds";
 import { withdrawFundsHandler } from "./carteira/withdrawFunds";
 import { betOnEventHandler } from "./apostas/betOnEvent";
+import { finishEventHandler } from "./eventos/finishEvent";
 
 import session from 'express-session';
 
@@ -48,6 +49,7 @@ routes.get('/getEvents', getEventsHandler.getEventsHandler);
 routes.get('/deleteEvent', deleteEventsHandler.deleteEventHandler);
 routes.get('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
 routes.get('/searchEvent', searchEventHandler.searchEventHandler);
+routes.get('/finishEvent', finishEventHandler.finishEventHandler);
 
 //rotas de carteiras
 routes.get('/addFunds', addFundsHandler.addFundsHandler);

@@ -1,12 +1,10 @@
 import {Request, RequestHandler, Response} from "express";
 
 import { conexaoBD } from "../conexaoBD";
-import OracleDB from "oracledb";
 
 export namespace withdrawFundsHandler {
 
     async function tokenParaId(token: string, conn:any):  Promise<number | undefined >{
-        
 
         try {
             const result = await conn.execute(
@@ -32,7 +30,7 @@ export namespace withdrawFundsHandler {
         }
     }
 
-    async function registrarTransacao(pIdCarteira: number, valor: number, conn: any): Promise<boolean | undefined >{
+    async function registrarTransacao(pIdCarteira: number, valor: number, conn:any): Promise<boolean | undefined >{
 
         try {
             const idCarteira = Number(pIdCarteira);
@@ -48,7 +46,6 @@ export namespace withdrawFundsHandler {
 
             await conn.commit()
             return true;
-
         }catch (err) {
 
             console.error('Erro ao registrar transação: ', err);
@@ -115,10 +112,10 @@ export namespace withdrawFundsHandler {
             }
             
             const novo_valor:number = SaldoAtual - valorDescontado
-            console.log(novo_valor)
+
             await conn.execute(
                 `UPDATE carteira
-                SET valor_total = :novo_valor
+                SET valor_total =  :novo_valor
                 WHERE id_usuarios_fk = :idUser`,
                 {
                     novo_valor: novo_valor,
@@ -135,6 +132,7 @@ export namespace withdrawFundsHandler {
                 console.error('Erro ao registrar a transação.'); 
                 return false; 
             }
+
 
         }catch (err) {
 
@@ -160,7 +158,7 @@ export namespace withdrawFundsHandler {
             return
         }
 
-        if(pAgenciaBancaria && pNumConta && pTipoConta && pValor && pValor >="101000"){
+        if(pAgenciaBancaria && pNumConta && pTipoConta && pValor){
             const authData = await sacarValorCarteira(token, pValor);
 
             if (authData !== undefined || authData !== false) {
