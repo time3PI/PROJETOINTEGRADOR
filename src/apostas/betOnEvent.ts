@@ -1,12 +1,5 @@
 import {Request, RequestHandler, Response} from "express";
-import OracleDB, { Connection, poolIncrement } from "oracledb"
-import dotenv from 'dotenv'; 
-
-
 import { conexaoBD } from "../conexaoBD";
-import { eventNames } from "process";
-
-dotenv.config();
 
 export namespace betOnEventHandler {
 
