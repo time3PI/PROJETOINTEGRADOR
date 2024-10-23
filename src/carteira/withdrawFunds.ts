@@ -102,7 +102,19 @@ export namespace withdrawFundsHandler {
             
             console.dir(arrayId.rows, {depth: null});
 
-            const novo_valor:number = SaldoAtual - valor 
+            let valorDescontado = valor
+
+            if(valor<=100){
+                valorDescontado = valor + (valor * 0.04)
+            }else if(valor>100 && valor<=1000){
+                valorDescontado = valor + (valor * 0.03)
+            }else if(valor>1000 && valor <=5000){
+                valorDescontado = valor + (valor * 0.02)
+            }else if(valor > 5000 && valor <=100000){
+                valorDescontado = valor + (valor * 0.01)
+            }
+            
+            const novo_valor:number = SaldoAtual - valorDescontado
             console.log(novo_valor)
             await conn.execute(
                 `UPDATE carteira
@@ -148,7 +160,7 @@ export namespace withdrawFundsHandler {
             return
         }
 
-        if(pAgenciaBancaria && pNumConta && pTipoConta && pValor){
+        if(pAgenciaBancaria && pNumConta && pTipoConta && pValor && pValor >="101000"){
             const authData = await sacarValorCarteira(token, pValor);
 
             if (authData !== undefined || authData !== false) {
