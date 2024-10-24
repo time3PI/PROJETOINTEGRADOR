@@ -1,9 +1,12 @@
-import {Request, RequestHandler, Response} from "express";
+import {Request, RequestHandler, response, Response} from "express";
 import dotenv from 'dotenv'; 
 import nodemailer from 'nodemailer';
 
 
+
 import { conexaoBD } from "../conexaoBD";
+import { request } from "http";
+import { text } from "stream/consumers";
 
 dotenv.config();
 
@@ -50,6 +53,9 @@ export namespace evalueateEventsHandler {
             return false;
         }
 
+       
+
+
         try {
             const IdUserTituloEventoResult = await conn.execute<any[]>(
                 `SELECT titulo, id_usuarios_fk
@@ -87,7 +93,9 @@ export namespace evalueateEventsHandler {
             const emailUser = linhas[0]?.[0];
 
             const emissor = nodemailer.createTransport({
-                service: 'gmail',
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
                 auth: {
                     user: 'process.env.GMAIL_EMAIL',
                     pass: 'process.env.SENHA_EMAIL',

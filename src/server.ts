@@ -13,6 +13,7 @@ import { betOnEventHandler } from "./apostas/betOnEvent";
 import { finishEventHandler } from "./eventos/finishEvent";
 
 import session from 'express-session';
+import { error, info } from "console";
 
 const port = 3000; 
 const server = express();
@@ -62,4 +63,4 @@ server.use(routes);
 
 server.listen(port, ()=>{
     console.log(`Servidor no ar na porta: ${port}`);
-})
+}) 
