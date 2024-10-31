@@ -4,7 +4,8 @@ create table usuarios(
     email varchar(100) unique not null,
     senha varchar(100) not null,
     data_nasc date not null,
-    isAdmin number(1) not null
+    isAdmin number(1) not null,
+    token varchar(10) not null
 );
 CREATE SEQUENCE SEQ_ID_USER
     START WITH 1       
@@ -19,7 +20,7 @@ create table eventos(
     data_hora_inicio_apostas TIMESTAMP not null,
     data_hora_fim_apostas TIMESTAMP not null,
     id_usuarios_fk integer,
-    status VARCHAR2(20) CHECK (status IN ('aguarda aprovação', 'suspenso', 'aprovado')) NOT NULL
+    status VARCHAR2(20) CHECK (status IN ('aguarda aprovação', 'suspenso', 'aprovado', 'finalizado')) NOT NULL
     );
 
 CREATE SEQUENCE SEQ_ID_EVENTOS
@@ -71,7 +72,7 @@ create table transacoes(
     id integer primary key,
     valor_total integer not null,
     data_transacao date not null,
-    tipo varchar2(20) CHECK (tipo IN ('apostado', 'sacado', 'adicionado', 'dividendo')) NOT NULL,
+    tipo varchar2(20) CHECK (tipo IN ('apostado', 'saque', 'adicionado', 'lucro')) NOT NULL,
     id_carteira_fk integer not null
 );
 
@@ -83,8 +84,10 @@ REFERENCES carteira (id);
 CREATE SEQUENCE SEQ_ID_TRANSACOES
     START WITH 1       
     INCREMENT BY 1;
+
 -- SELECTS copia e cola
 select * from usuarios;
 select * from EVENTOS;
 select * from carteira;
 select * from apostas;
+select * from transacoes;

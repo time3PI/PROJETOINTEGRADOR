@@ -1,14 +1,13 @@
-import {Request, RequestHandler, Response} from "express";
-import dotenv from 'dotenv'; 
+import { Request, RequestHandler, Response } from "express";
+import { conexaoBD, tokenParaId } from "../conexaoBD";
 
-import { conexaoBD } from "../conexaoBD";
-
-dotenv.config();
-
+// Define um namespace para o gerenciador de eventos
 export namespace addEventsHandler {
 
-    async function tokenParaId(token: string):  Promise<number | undefined >{
-        let conn = await conexaoBD();
+    // Função assíncrona para inserir um novo evento no banco de dados
+    async function InserirEvento(titulo: string, desc: string, data_inicio: string, data_hora_inicio_apostas: string, data_hora_fim_apostas: string, token: string): Promise<boolean | undefined> {
+
+        let conn = await conexaoBD();  // Estabelece uma conexão com o banco
 
         if (!conn) {
             console.error('Falha na conexão com o banco de dados.');
@@ -16,45 +15,10 @@ export namespace addEventsHandler {
         }
 
         try {
-            const result = await conn.execute(
-                `SELECT id from usuarios
-                where token = :token`,
-                {
-                    token: { val: token },
-                }
-            );
+            // Obtém o ID do usuário a partir do token fornecido
+            const idUser = await tokenParaId(token, conn);
 
-            const rows = result.rows as Array<[number]>; 
-
-            if (!rows || rows.length === 0) {
-                throw new Error('Usuário não encontrado para o token fornecido');
-            }
-
-            const idUser = rows[0][0]
-
-            return idUser;
-        } catch (err) {
-            console.error('Erro ao buscar id por token: ', err);
-            return undefined;
-        } finally {
-            await conn.close();
-        }
-    }
-
-
-    async function InserirEvento(titulo: string, desc: string, data_inicio:string, data_hora_inicio_apostas:string, data_hora_fim_apostas: string, token:string): Promise<boolean | undefined >{
-
-        let conn = await conexaoBD();
-
-        if (!conn) {
-            console.error('Falha na conexão com o banco de dados.');
-            return undefined;
-        }
-
-        try {
-
-            const idUser = await tokenParaId(token);
-
+            // Insere o evento com os dados fornecidos e o ID do usuário como chave estrangeira
             await conn.execute(
                 `INSERT INTO eventos (id, titulo, descricao, data_inicio, data_hora_inicio_apostas, data_hora_fim_apostas, id_usuarios_fk, status) 
                 VALUES (seq_id_eventos.NEXTVAL, :titulo, :descricao, TO_TIMESTAMP(:data_inicio, 'DD/MM/YYYY HH24:MI:SS'), 
@@ -68,48 +32,51 @@ export namespace addEventsHandler {
                     idUser: idUser
                 }
             );
-            await conn.commit()
+            
+            await conn.commit();  // Confirma a transação
             return true;
 
-        }catch (err) {
-
+        } catch (err) {
+            // Em caso de erro, faz o rollback para desfazer as alterações
             console.error('Erro ao cadastrar evento: ', err);
             await conn.rollback();
             return undefined;
 
-        }finally {
+        } finally {
+            // Fecha a conexão com o banco de dados
             await conn.close();
         }
     }
 
+    // Função que lida com a requisição HTTP para criar um novo evento
     export const addNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
 
+        // Extrai os parâmetros da requisição HTTP
         const pTitulo = req.get('titulo');
         const pDesc = req.get('desc');
         const pDataInicio = req.get('data_inicio');
         const pDataHoraInicioApostas = req.get('data_hora_inicio_apostas');
         const pDataHoraFimApostas = req.get('data_hora_fim_apostas');
-        const token = req.session.token
+        const token = req.session.token;  // Obtém o token do usuário da sessão
 
-        if(token === undefined || token === null){
-            res.status(400).send("Necessario realizar Login para esta ação");
-            return
+        // Verifica se o usuário está autenticado (possui token)
+        if (token === undefined || token === null) {
+            res.status(400).send("Necessário realizar login para esta ação");
+            return;
         }
 
-        if(pTitulo && pDesc && pDataInicio && pDataHoraInicioApostas && pDataHoraFimApostas){
+        // Verifica se todos os parâmetros obrigatórios estão presentes
+        if (pTitulo && pDesc && pDataInicio && pDataHoraInicioApostas && pDataHoraFimApostas) {
             const authData = await InserirEvento(pTitulo, pDesc, pDataInicio, pDataHoraInicioApostas, pDataHoraFimApostas, token);
 
-            if ( authData !== undefined && authData !== false) {
-
+            // Caso o evento tenha sido inserido com sucesso, envia uma resposta de sucesso
+            if (authData !== undefined && authData !== false) {
                 res.status(200).send(`Novo evento adicionado com sucesso!`);
-            
-            }else{
-                
-                res.status(500).send("Falha ao inserir dados no sistema");
+            } else {
+                res.status(500).send("Falha ao inserir dados no sistema");  // Em caso de erro, responde com status 500
             }
-        }else{
-            
-            res.status(400).send("Parâmetros inválidos ou faltantes.");
+        } else {
+            res.status(400).send("Parâmetros inválidos ou faltantes.");  // Caso algum parâmetro esteja ausente, responde com status 400
         }
     }
 }

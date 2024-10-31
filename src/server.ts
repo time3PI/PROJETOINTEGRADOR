@@ -1,5 +1,9 @@
+//importações dos types
 import express from "express";
 import {Request, Response, Router} from "express";
+import session from 'express-session';
+
+//importações dos arquivos
 import { LoginHandler } from "./usuarios/login";
 import { SignUpHandler } from "./usuarios/signUp";
 import { addEventsHandler } from "./eventos/addEvents";
@@ -12,13 +16,12 @@ import { withdrawFundsHandler } from "./carteira/withdrawFunds";
 import { betOnEventHandler } from "./apostas/betOnEvent";
 import { finishEventHandler } from "./eventos/finishEvent";
 
-import session from 'express-session';
-import { error, info } from "console";
-
+//configurações de sevidor
 const port = 3000; 
 const server = express();
 const routes = Router();
 
+//configurações da sessao do usuario
 server.use(
     session({
         secret: 'segredo_da_sessao',
@@ -35,29 +38,30 @@ declare module 'express-session' {
     }
 }
 
+// Rota padrão
 routes.get('/', (req: Request, res: Response)=>{
     res.statusCode = 403;
     res.send('Acesso não permitido.');
 });
 
 // Rotas de usuarios
-routes.get('/signUp', SignUpHandler.signUpHandler);
-routes.put('/login', LoginHandler.loginHandler);
+routes.post('/signUp', SignUpHandler.signUpHandler);
+routes.post('/login', LoginHandler.loginHandler);
 
 // Rotas de eventos
-routes.get('/addNewEvent', addEventsHandler.addNewEventHandler);
+routes.post('/addNewEvent', addEventsHandler.addNewEventHandler);
 routes.get('/getEvents', getEventsHandler.getEventsHandler);
-routes.get('/deleteEvent', deleteEventsHandler.deleteEventHandler);
-routes.get('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
+routes.put('/deleteEvent', deleteEventsHandler.deleteEventHandler);
+routes.put('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
 routes.get('/searchEvent', searchEventHandler.searchEventHandler);
-routes.get('/finishEvent', finishEventHandler.finishEventHandler);
+routes.put('/finishEvent', finishEventHandler.finishEventHandler);
 
 //rotas de carteiras
-routes.get('/addFunds', addFundsHandler.addFundsHandler);
-routes.get('/withdrawFunds', withdrawFundsHandler.withdrawFundsHandler);
+routes.post('/addFunds', addFundsHandler.addFundsHandler);
+routes.post('/withdrawFunds', withdrawFundsHandler.withdrawFundsHandler);
 
 //rotas apostas
-routes.get('/betOnEvent', betOnEventHandler.betOnEventHandler);
+routes.post('/betOnEvent', betOnEventHandler.betOnEventHandler);
 
 server.use(routes);
 

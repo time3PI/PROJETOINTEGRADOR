@@ -1,19 +1,17 @@
-import {Request, RequestHandler, response, Response} from "express";
-import dotenv from 'dotenv'; 
+import { Request, RequestHandler, Response } from "express";
+import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-
-
-
 import { conexaoBD } from "../conexaoBD";
-import { request } from "http";
-import { text } from "stream/consumers";
+import { Connection } from "oracledb";
 
-dotenv.config();
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
+// Define o namespace para o manipulador de avaliação de eventos
 export namespace evalueateEventsHandler {
 
+    // Função para aprovar um evento
     async function aprovarEvento(idEvento: string): Promise<boolean | undefined> {
-        let conn = await conexaoBD();
+        let conn = await conexaoBD();  // Abre conexão com o banco de dados
 
         if (!conn) {
             console.error('Falha na conexão com o banco de dados.');
@@ -21,6 +19,7 @@ export namespace evalueateEventsHandler {
         }
 
         try {
+            // Atualiza o status do evento para 'aprovado'
             await conn.execute(
                 `UPDATE eventos
                 SET status = 'aprovado'
@@ -30,33 +29,25 @@ export namespace evalueateEventsHandler {
                 }
             );
 
-            await conn.commit()
+            await conn.commit();  // Confirma a transação
             return true;
 
-        }catch (err) {
-
+        } catch (err) {
+            // Trata erros e realiza o rollback da transação
             console.error('Erro ao aprovar evento: ', err);
             await conn.rollback();
             return undefined;
 
-        }finally {
-            await conn.close();
+        } finally {
+            await conn.close();  // Fecha a conexão
         }
     }
 
-    async function emailReprovacao(idEvento: string, textoReprovacao: string): Promise<boolean> {
-
-        let conn = await conexaoBD();
-
-        if (!conn) {
-            console.error('Falha na conexão com o banco de dados.');
-            return false;
-        }
-
-       
-
+    // Função para enviar um e-mail de reprovação ao usuário responsável pelo evento
+    async function emailReprovacao(idEvento: string, textoReprovacao: string, conn: Connection): Promise<boolean> {
 
         try {
+            // Obtém o título do evento e o ID do usuário criador do evento
             const IdUserTituloEventoResult = await conn.execute<any[]>(
                 `SELECT titulo, id_usuarios_fk
                 FROM eventos
@@ -74,6 +65,7 @@ export namespace evalueateEventsHandler {
 
             const [titulo, idUserEvento] = rows[0];
 
+            // Obtém o e-mail do usuário que criou o evento
             const emailUserResult = await conn.execute<any[]>(
                 `SELECT email
                 FROM usuarios
@@ -82,8 +74,7 @@ export namespace evalueateEventsHandler {
                     idUserEvento: idUserEvento,
                 }
             );
-            
-            console.dir(emailUserResult, { depth: null });
+
             const linhas = emailUserResult.rows;
             if (!linhas || linhas.length === 0) {
                 console.error('Email do usuário não encontrado.');
@@ -92,38 +83,38 @@ export namespace evalueateEventsHandler {
 
             const emailUser = linhas[0]?.[0];
 
+            // Configura o serviço de envio de e-mail com Nodemailer
             const emissor = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
                 secure: false,
                 auth: {
-                    user: 'process.env.GMAIL_EMAIL',
-                    pass: 'process.env.SENHA_EMAIL',
+                    user: process.env.GMAIL_EMAIL,
+                    pass: process.env.SENHA_EMAIL,
                 }
             });
 
+            // Define o conteúdo do e-mail de reprovação
             const opEmail = {
-                from: 'process.env.GMAIL_EMAIL',
+                from: process.env.GMAIL_EMAIL,
                 to: emailUser,
                 subject: `Seu Evento ${titulo} foi Reprovado!`,
                 text: textoReprovacao,
             };
 
+            // Envia o e-mail
             await emissor.sendMail(opEmail);
 
             return true;
         } catch (err) {
             console.error('Erro ao enviar email: ', err);
             return false;
-        } finally {
-            await conn.close();
         }
     }
 
-
-
+    // Função para reprovar um evento e enviar um e-mail ao usuário
     async function reprovarEvento(idEvento: string, textoReprovacao: string): Promise<boolean | undefined> {
-        let conn = await conexaoBD();
+        let conn = await conexaoBD();  // Abre conexão com o banco de dados
 
         if (!conn) {
             console.error('Falha na conexão com o banco de dados.');
@@ -131,6 +122,7 @@ export namespace evalueateEventsHandler {
         }
 
         try {
+            // Atualiza o status do evento para 'suspenso'
             await conn.execute(
                 `UPDATE eventos
                 SET status = 'suspenso'
@@ -139,55 +131,60 @@ export namespace evalueateEventsHandler {
                     idEvento: idEvento,
                 }
             );
-            if (await emailReprovacao(idEvento, textoReprovacao)) {
-                await conn.commit();
+
+            // Envia o e-mail de reprovação
+            const EmailEnviado = await emailReprovacao(idEvento, textoReprovacao, conn);
+            if (EmailEnviado) {
+                await conn.commit();  // Confirma a transação se o e-mail foi enviado
                 return true;
             } else {
                 console.error('Falha ao enviar o email de reprovação.');
-                await conn.rollback();
+                await conn.rollback();  // Realiza rollback se o envio do e-mail falhar
                 return false;
             }
-        }catch (err) {
-
+        } catch (err) {
             console.error('Erro ao reprovar evento: ', err);
             await conn.rollback();
             return undefined;
 
-        }finally {
-            await conn.close();
+        } finally {
+            await conn.close();  // Fecha a conexão
         }
     }
 
+    // Manipulador de requisição HTTP para aprovação/reprovação de eventos
     export const evaluateNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
         const pIdEvento = req.get('idEvento');
         const pTextoReprovacao = req.get('textoReprovacao');
         const pOpcao = req.get('opcao');
-        const isAdmin = req.session.isAdmin;
+        const isAdmin = req.session.isAdmin;  // Verifica se o usuário é um moderador
 
-        if(isAdmin){
-            if(pIdEvento && pTextoReprovacao && pOpcao){
-                if(pOpcao === 'aprovar'){
+        if (isAdmin) {
+            if (pIdEvento && pTextoReprovacao && pOpcao) {
+                if (pOpcao === 'aprovar') {
+                    // Aprova o evento
                     const authData = await aprovarEvento(pIdEvento);
-                    if (authData !== undefined){
+                    if (authData !== undefined) {
                         res.status(200).send('Evento aprovado com sucesso!');
                     } else {
                         res.status(500).send('Erro ao aprovar evento');
                     }
-                }else if(pOpcao === 'reprovar'){
+                } else if (pOpcao === 'reprovar') {
+                    // Reprova o evento e envia e-mail de notificação
                     const authData = await reprovarEvento(pIdEvento, pTextoReprovacao);
-                    if (authData === true){
+                    if (authData === true) {
                         res.status(200).send('Evento reprovado com sucesso!');
                     } else {
                         res.status(500).send('Erro ao reprovar evento');
                     }
-                }else{
-                    res.status(400).send('opção invalida!')
+                } else {
+                    res.status(400).send('Opção inválida!');
                 }
-            }else {
-                res.status(400).send('Faltando parametros')
+            } else {
+                res.status(400).send('Faltando parâmetros');
             }
-        }else{
-            res.status(400).send('Necessario ser moderador para realizar essa ação!')
+        } else {
+            res.status(400).send('Necessário ser moderador para realizar essa ação!');
         }
     }
 }
