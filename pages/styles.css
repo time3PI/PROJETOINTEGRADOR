@@ -1,0 +1,357 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Poppins, sans-serif;
+    background: url('img/background.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-container {
+    display: flex;
+    width: 80%;
+    max-width: 900px;
+    height: 600px;
+    background-color: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+  }
+  
+  .image-section {
+    flex: 1;
+    background: url('img/background.png') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    min-height: 100%; /* Garante que a altura da imagem seja igual à da form-section */
+  }
+
+    .text-overlay {
+    position: absolute;
+    bottom: 20px; 
+    left: 20px; 
+    color: white;
+    font-size: 24px;
+    text-align: center;
+    z-index: 2; 
+    }
+  
+  h2 {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+/*======================================================================
+Links
+======================================================================*/
+  p a {
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+  }
+
+  p a::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+    -webkit-transform-origin: right;
+            transform-origin: right;
+    transition: transform 250ms ease-in;
+    transition: transform 250ms ease-in;
+    transition: transform 250ms ease-in, transform 250ms ease-in;
+    }
+
+    p a:hover::after {
+    -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+    -webkit-transform-origin: left;
+            transform-origin: left;
+  }
+
+/* Estilos aplicados somente à página de evento */
+
+.evento-page .login-container {
+  width: 90%; /* Aumentando para 90% da tela */
+  max-width: 1100px; /* Aumentando a largura máxima para caber mais conteúdo */
+  height: 700px; /* Aumentando a altura */
+  background-color: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.evento-page .form-section {
+  flex: 1.5; /* Ajuste para expandir o espaço do formulário */
+}
+
+.evento-page .form-content {
+  max-width: 400px; /* Expandir o conteúdo do formulário */
+}
+
+/*======================================================================
+Forms
+======================================================================*/
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form label {
+    margin-bottom: 5px;
+    font-size: 15px;
+  }
+  
+  form input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #222;
+    color: #fff;
+  }
+  
+  form input::placeholder {
+    font-size: 15px;
+    color: #aaa;
+  }
+
+  .form-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #000;
+    position: relative;
+  }
+  
+  .form-content {
+    width: 100%;
+    max-width: 300px;
+    color: #fff;
+  }
+  
+  .form-content .logo img {
+    display: block;
+    margin: 0 auto 20px;
+  }
+  
+/*======================================================================
+Botão Entrar/Cadastrar
+======================================================================*/
+
+  button {
+    padding: 10px;
+    background: linear-gradient(to right, #04D2D3, #7e5ac8); 
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.4s ease; 
+  }
+  
+  button::before, button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    transition: color 0.4s ease, background 0.4s ease, border 0.4s ease;
+  }
+  
+  button::before {
+    background: linear-gradient(to right, #7e5ac8, #04D2D3);
+    transform: translateX(-100%); 
+  }
+  
+  button:hover::before {
+    transform: translateX(0); 
+  }
+  
+  button:hover::after {
+    transform: translateX(0); 
+  }
+  
+  button:hover {
+    color: black; 
+  }
+
+/*======================================================================
+Botão X
+======================================================================*/
+
+  .close-button {
+    position: absolute;
+    top: 10px; 
+    right: 10px; 
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .close-button i {
+    color: #ffff; 
+    font-size: 30px; 
+  }
+  
+  .close-button:hover i {
+    opacity: 0.8;
+  }
+  
+/*======================================================================
+Campo Date
+======================================================================*/
+
+  input[type="date"] {
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background-color: #aaa;
+    color: #aaa;
+    font-size: 16px;
+  }
+  
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: transparent; 
+    cursor: pointer; 
+    color: #aaa;
+  }
+  
+  input[type="date"]::-webkit-input-placeholder {
+    color: #aaa;
+    font-size: 15px;
+  }
+
+
+
+/*======================================================================
+Icones nos campos
+======================================================================*/
+
+
+  /* Container para os inputs e ícones */
+  .input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  }
+
+  .input-container input {
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #222;
+    color: #fff;
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .input-container .icon-right {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #aaa;
+    font-size: 18px;  /* Tamanho do ícone proporcional */
+    pointer-events: none; /* Não permite interação com o ícone */
+    /*top: 50%;   Centraliza o ícone verticalmente */
+    /*transform: translateY(-50%);   Ajuste fino para centralização */
+  }
+
+  input::placeholder {
+    font-size: 15px;
+    color: #aaa;
+  }
+
+
+
+/*======================================================================
+Modal
+======================================================================*/
+  .modal-content {
+    background-color: #111;
+    border-radius: 10px;     
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);  
+    color: #fff;             
+  }
+
+  .modal-header {
+    border-bottom: none;  
+    padding: 20px;        
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-title {
+    font-size: 24px;
+    font-weight: 500;  
+  }
+
+  .modal-body {
+    padding: 20px;  /* Adicionar padding para manter o espaçamento consistente */
+  }
+
+  /* Estilo do Modal Footer */
+  .modal-footer {
+    border-top: none;  /* Remover a borda superior */
+    padding: 20px;  /* Adicionar padding */
+    justify-content: flex-end;  /* Alinhar o botão à direita */
+  }
+
+  /* Ajustes no botão do Modal */
+  .modal-footer .btn-secondary {
+    background: linear-gradient(to right, #04D2D3, #7e5ac8);  /* Gradiente para combinar com o botão */
+    color: #fff;  /* Cor do texto */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;  /* Aumentar o tamanho do botão */
+    cursor: pointer;
+  }
+
+  .modal-footer .btn-secondary:hover {
+    background: linear-gradient(to left, #04D2D3, #7e5ac8);  /* Inverter o gradiente no hover */
+  }
+
+  /* Tabela de taxas */
+  .modal-body table {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .modal-body table th,
+  .modal-body table td {
+    padding: 10px;
+    text-align: left;
+    background-color: #333;
+    color: #aaa;
+  }
+
+  .modal-body table th {
+    background-color: #333;
+  }
+  
