@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { Connection } from "oracledb";
 import { conexaoBD } from "../conexaoBD";
+import { formatarData } from "../funcoes";
 
 // Define um namespace chamado SignUpHandler
 export namespace SignUpHandler {
@@ -50,7 +51,7 @@ export namespace SignUpHandler {
     }
 
     // Função assíncrona para inserir um novo usuário no banco de dados
-    async function InserirUser(nome: string, email: string, senha: string, dataNasc: string): Promise<boolean | undefined> {
+    async function InserirUser(nome: string, email: string, senha: string, dataNasc: string): Promise<boolean | undefined | string> {
 
         // Estabelece a conexão com o banco de dados
         let conn = await conexaoBD();
@@ -78,6 +79,10 @@ export namespace SignUpHandler {
                 console.error('Este email já possui um usuário vinculado!');
                 return false; 
             } else {
+
+                // Formata a data de nascimento do usuario para o banco de dados
+                dataNasc = formatarData(dataNasc);
+
                 // Caso contrário, insere o novo usuário no banco de dados
                 await conn.execute(
                     `INSERT INTO usuarios (id, email, senha, nome, data_nasc, isAdmin, token) 
@@ -116,24 +121,47 @@ export namespace SignUpHandler {
         }
     }
 
+    function verificarMaioridade(dataNascimento: string): boolean {
+        const hoje = new Date();
+        const nascimento = new Date(dataNascimento);
+        
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+        
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        
+        return idade >= 18;
+    }
+
     // Função que lida com a requisição HTTP de registro de um novo usuário
     export const signUpHandler: RequestHandler = async (req: Request, res: Response) => {
         
         // Extrai os parâmetros necessários da requisição
-        const pNome = req.get('nome');
-        const pEmail = req.get('email');
-        const pSenha = req.get('senha');
-        const pDataNasc = req.get('dataNasc');
+
+        const { nome, email, senha,  dataNasc } = req.body;
+
+        // Everifica se o usuario é maior de 18 anos
+        if(!verificarMaioridade(dataNasc)){
+            res.status(400).send("É necesario ser maior de 18 anos para realizar essa ação!");
+        }
 
         // Verifica se todos os parâmetros estão presentes
-        if (pNome && pEmail && pSenha && pDataNasc) {
-            const authData = await InserirUser(pNome, pEmail, pSenha, pDataNasc);
+        if (nome && email && senha && dataNasc) {
+
+
+            const authData = await InserirUser(nome, email, senha, dataNasc);
 
             // Se o usuário foi inserido com sucesso, responde com uma mensagem de sucesso
-            if (authData !== undefined && authData !== false) {
+            if(authData === false){
+                res.status(400).send("Esse email ja possui um usuario vinculado!");
+            }
+
+            if (authData) {
                 res.status(200).send(`Nova conta adicionada com sucesso!`);
             } else {
-                res.status(500).send("Falha ao inserir dados no sistema");  // Em caso de erro interno, retorna status 500
+                res.status(500).send("Falha ao inserir novo ususario no sistema");  // Em caso de erro interno, retorna status 500
             }
         } else {
             res.status(400).send("Parâmetros inválidos ou faltantes.");  // Retorna erro caso algum parâmetro esteja ausente

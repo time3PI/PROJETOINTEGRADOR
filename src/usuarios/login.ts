@@ -61,14 +61,13 @@ export namespace LoginHandler {
     
     // Função de login que trata a requisição HTTP do usuário
     export const loginHandler: RequestHandler = async (req:Request, res:Response) =>{
-        // Obtém os parâmetros de email e senha da requisição HTTP
-        const pEmail = req.get('email');
-        const pSenha = req.get('senha');
+
+        const { email, senha } = req.body;
 
         // Verifica se ambos os parâmetros estão presentes
-        if(pEmail && pSenha){
+        if(email && senha){
             let dados : contaUsuario[] | undefined = [];
-            dados = await VerificaLogin(pEmail, pSenha);
+            dados = await VerificaLogin(email, senha);
 
             // Se os dados do usuário são válidos, armazena na sessão e envia resposta de sucesso
             if (dados !== undefined && dados !== null)  {
@@ -76,7 +75,7 @@ export namespace LoginHandler {
                 req.session.isAdmin = dados[0].isAdmin;    // Armazena o status de admin na sessão
                 res.status(200).send("Login realizado com sucesso!");
             } else {
-                res.status(400).send('Credenciais inválidas');  // Envia resposta de erro para credenciais inválidas
+                res.status(400).send('Email ou Senha incorretos!');  // Envia resposta de erro para credenciais inválidas
             }
             
         } else {

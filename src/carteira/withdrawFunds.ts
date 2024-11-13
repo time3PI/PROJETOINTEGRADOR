@@ -1,7 +1,7 @@
 import {Request, RequestHandler, Response} from "express";
-import { conexaoBD, tokenParaId } from "../conexaoBD";
+import { conexaoBD } from "../conexaoBD";
 import { registrarTransacao } from "./transacoes";
-
+import { tokenParaId } from "../funcoes";
 export namespace withdrawFundsHandler {
 
     async function sacarValorCarteira(token: string, pValor: string): Promise< boolean | undefined >{

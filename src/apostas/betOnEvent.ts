@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
-import { conexaoBD, tokenParaId } from "../conexaoBD";
+import { conexaoBD} from "../conexaoBD";
+import { tokenParaId } from "../funcoes";
 import { Connection } from "oracledb";
 
 // Define um namespace para o manipulador de apostas em eventos

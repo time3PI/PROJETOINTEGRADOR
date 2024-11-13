@@ -2,6 +2,7 @@
 import express from "express";
 import {Request, Response, Router} from "express";
 import session from 'express-session';
+import path from "path";
 
 //importações dos arquivos
 import { LoginHandler } from "./usuarios/login";
@@ -20,6 +21,11 @@ import { finishEventHandler } from "./eventos/finishEvent";
 const port = 3000; 
 const server = express();
 const routes = Router();
+
+server.use(express.static(path.resolve(__dirname, '../public')));
+
+// Permite o parsing de JSON no corpo das requisições
+server.use(express.json());
 
 //configurações da sessao do usuario
 server.use(

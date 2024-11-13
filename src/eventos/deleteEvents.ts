@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
-import { conexaoBD, tokenParaId } from "../conexaoBD";
+import { conexaoBD } from "../conexaoBD";
+import { tokenParaId } from "../funcoes";
 
 // Define um namespace para o gerenciador de exclusão de eventos
 export namespace deleteEventsHandler {

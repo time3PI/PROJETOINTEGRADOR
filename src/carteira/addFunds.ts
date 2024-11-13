@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from "express";
 import { registrarTransacao } from "./transacoes";
-import { conexaoBD, tokenParaId } from "../conexaoBD";
-import { Connection } from "oracledb";
+import { conexaoBD } from "../conexaoBD";
+import { tokenParaId, formatarData } from "../funcoes"; 
 
 // Define um namespace para o manipulador de adição de fundos
 export namespace addFundsHandler {
@@ -71,13 +71,9 @@ export namespace addFundsHandler {
 
     // Exporta o manipulador de requisição para adicionar fundos
     export const addFundsHandler: RequestHandler = async (req: Request, res: Response) => {
-
+ 
         // Obtém os parâmetros do cartão e valor do corpo da requisição
-        const pNumCartao = req.get('numCartao');
-        const pNomeCartao = req.get('nomeCartao');
-        const pDataVencimento = req.get('dataVencimento');
-        const pCodSeguranca = req.get('codSeguranca');
-        const pValor = req.get('valor');
+        const {  nomeCartao, numCartao, dataValidade, valor, cvv } = req.body;
         const token = req.session.token; // Obtém o token do usuário da sessão
 
         // Verifica se o usuário está autenticado
@@ -87,9 +83,9 @@ export namespace addFundsHandler {
         }
 
         // Verifica se todos os parâmetros necessários estão presentes
-        if (pNumCartao && pNomeCartao && pDataVencimento && pCodSeguranca && pValor) {
+        if ( numCartao && nomeCartao && dataValidade && cvv && valor) {
             // Chama a função `inserirValorCarteira` para adicionar o valor à carteira
-            const authData = await inserirValorCarteira(token, pValor);
+            const authData = await inserirValorCarteira(token, valor);
 
             // Se a operação foi bem-sucedida, envia uma resposta de sucesso
             if (authData !== undefined && authData !== false) {

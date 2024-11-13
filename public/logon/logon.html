@@ -6,7 +6,7 @@
   <title>Cadastro</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../styles.css">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="login-container">
-      <a href="index.html" class="close-button">
+      <a href="../home/home.html" class="close-button">
           <i class="bi bi-x"></i>
       </a>
       <div class="image-section">
@@ -29,12 +29,12 @@
         <div class="form-content">
           <div class="logo-container">
             <div class="logo">
-              <img src="img/logo.png" alt="Logo" />
+              <img src="../img/logo.png" alt="Logo" />
             </div>
           </div>
           <h2>Cadastro</h2>
-          <p>Já tem uma conta? <a href="login.html">Entrar</a></p>
-          <form action="#">
+          <p>Já tem uma conta? <a href="../login/login.html">Entrar</a></p>
+          <form id="logonForm">
               <label for="nome">Nome Completo</label>
               <div class="input-container">
                 <input type="text" id="nome" placeholder="Digite seu nome completo" required>
@@ -65,5 +65,6 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="logon.js"></script>
   </body>
 </html>
