@@ -3,6 +3,7 @@ import express from "express";
 import {Request, Response, Router} from "express";
 import session from 'express-session';
 import path from "path";
+import cors from 'cors';
 
 //importações dos arquivos
 import { LoginHandler } from "./usuarios/login";
@@ -22,10 +23,10 @@ const port = 3000;
 const server = express();
 const routes = Router();
 
-server.use(express.static(path.resolve(__dirname, '../public')));
-
 // Permite o parsing de JSON no corpo das requisições
 server.use(express.json());
+server.use(cors());
+server.use(express.static(path.resolve(__dirname, '../public')));
 
 //configurações da sessao do usuario
 server.use(

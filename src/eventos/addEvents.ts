@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from "express";
 import { conexaoBD } from "../conexaoBD";
-import { tokenParaId } from "../funcoes";
+import { formatarData, formatarDataHora, tokenParaId } from "../funcoes";
 
 // Define um namespace para o gerenciador de eventos
 export namespace addEventsHandler {
@@ -18,6 +18,7 @@ export namespace addEventsHandler {
         try {
             // Obtém o ID do usuário a partir do token fornecido
             const idUser = await tokenParaId(token, conn);
+            data_inicio = formatarData(data_inicio);
 
             // Insere o evento com os dados fornecidos e o ID do usuário como chave estrangeira
             await conn.execute(
@@ -53,11 +54,12 @@ export namespace addEventsHandler {
     export const addNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
 
         // Extrai os parâmetros da requisição HTTP
-        const pTitulo = req.get('titulo');
-        const pDesc = req.get('desc');
-        const pDataInicio = req.get('data_inicio');
-        const pDataHoraInicioApostas = req.get('data_hora_inicio_apostas');
-        const pDataHoraFimApostas = req.get('data_hora_fim_apostas');
+        const { titulo, desc, dataInicio, dataInicioApostas, horaInicioApostas, dataFimApostas, horaFimApostas } = req.body;
+        // const pTitulo = req.get('titulo');
+        // const pDesc = req.get('desc');
+        // const pDataInicio = req.get('data_inicio');
+        // const pDataHoraInicioApostas = req.get('data_hora_inicio_apostas');
+        // const pDataHoraFimApostas = req.get('data_hora_fim_apostas');
         const token = req.session.token;  // Obtém o token do usuário da sessão
 
         // Verifica se o usuário está autenticado (possui token)
@@ -66,9 +68,13 @@ export namespace addEventsHandler {
             return;
         }
 
+        const dataHoraInicioApostas = formatarDataHora(dataInicioApostas, horaInicioApostas);
+        const dataHoraFimApostas = formatarDataHora(dataFimApostas, horaFimApostas);
+        
+
         // Verifica se todos os parâmetros obrigatórios estão presentes
-        if (pTitulo && pDesc && pDataInicio && pDataHoraInicioApostas && pDataHoraFimApostas) {
-            const authData = await InserirEvento(pTitulo, pDesc, pDataInicio, pDataHoraInicioApostas, pDataHoraFimApostas, token);
+        if (titulo && desc && dataInicio && dataHoraInicioApostas && dataHoraFimApostas) {
+            const authData = await InserirEvento(titulo, desc, dataInicio, dataHoraInicioApostas, dataHoraFimApostas, token);
 
             // Caso o evento tenha sido inserido com sucesso, envia uma resposta de sucesso
             if (authData !== undefined && authData !== false) {
