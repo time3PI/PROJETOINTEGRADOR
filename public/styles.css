@@ -1,99 +1,25 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Poppins, sans-serif;
-    background: url('img/background.png') no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .login-container {
-    display: flex;
-    width: 80%;
-    max-width: 900px;
-    height: 600px;
-    background-color: #111;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    position: relative;
-  }
-  
-  .image-section {
-    flex: 1;
-    background: url('img/background.png') no-repeat center center;
-    background-size: cover;
-    position: relative;
-    min-height: 100%; /* Garante que a altura da imagem seja igual à da form-section */
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    .text-overlay {
-    position: absolute;
-    bottom: 20px; 
-    left: 20px; 
-    color: white;
-    font-size: 24px;
-    text-align: center;
-    z-index: 2; 
-    }
-  
-  h2 {
-    text-align: center;
-    font-size: 40px;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    font-size: 10px;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-/*======================================================================
-Links
-======================================================================*/
-  p a {
-    text-decoration: none;
-    color: #fff;
-    position: relative;
-  }
+body {
+  font-family: Poppins, sans-serif;
+  background: url('img/background.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  p a::after{
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 2px;
-    background: currentColor;
-    -webkit-transform: scaleX(0);
-            transform: scaleX(0);
-    -webkit-transform-origin: right;
-            transform-origin: right;
-    transition: transform 250ms ease-in;
-    transition: transform 250ms ease-in;
-    transition: transform 250ms ease-in, transform 250ms ease-in;
-    }
-
-    p a:hover::after {
-    -webkit-transform: scaleX(1);
-            transform: scaleX(1);
-    -webkit-transform-origin: left;
-            transform-origin: left;
-  }
-
-/* Estilos aplicados somente à página de evento */
-
-.evento-page .login-container {
-  width: 90%; /* Aumentando para 90% da tela */
-  max-width: 1100px; /* Aumentando a largura máxima para caber mais conteúdo */
-  height: 700px; /* Aumentando a altura */
+.login-container {
+  display: flex;
+  flex-wrap: wrap;  /* Permite que os elementos se ajustem em telas menores */
+  width: 90%;  /* Largura adaptável */
+  max-width: 900px;
+  height: 600px;
   background-color: #111;
   border-radius: 10px;
   overflow: hidden;
@@ -101,257 +27,461 @@ Links
   position: relative;
 }
 
-.evento-page .form-section {
-  flex: 1.5; /* Ajuste para expandir o espaço do formulário */
+.image-section {
+  flex: 1;
+  background: url('img/background.png') no-repeat center center;
+  background-size: cover;
+  position: relative;
+  min-height: 100%;
 }
 
-.evento-page .form-content {
-  max-width: 400px; /* Expandir o conteúdo do formulário */
+.text-overlay {
+  position: absolute;
+  bottom: 20px; 
+  left: 20px; 
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  z-index: 2;
+}
+
+h2 {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 10px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/*======================================================================
+Links
+======================================================================*/
+p a {
+  text-decoration: none;
+  color: #fff;
+  position: relative;
+}
+
+p a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 250ms ease-in;
+}
+
+p a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /*======================================================================
 Forms
 ======================================================================*/
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form label {
-    margin-bottom: 5px;
-    font-size: 15px;
-  }
-  
-  form input {
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    background-color: #222;
-    color: #fff;
-  }
-  
-  form input::placeholder {
-    font-size: 15px;
-    color: #aaa;
-  }
+form {
+  display: flex;
+  flex-direction: column;
+}
 
-  .form-section {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background-color: #000;
-    position: relative;
-  }
-  
-  .form-content {
-    width: 100%;
-    max-width: 300px;
-    color: #fff;
-  }
-  
-  .form-content .logo img {
-    display: block;
-    margin: 0 auto 20px;
-  }
-  
+form label {
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+
+form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+}
+
+form input::placeholder {
+  font-size: 15px;
+  color: #aaa;
+}
+
+.form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #000;
+  position: relative;
+}
+
+.form-content {
+  width: 100%;
+  max-width: 400px;
+  color: #fff;
+}
+
+.form-content .logo img {
+  display: block;
+  margin: 0 auto 20px;
+}
+
 /*======================================================================
 Botão Entrar/Cadastrar
 ======================================================================*/
+button {
+  padding: 10px;
+  background: linear-gradient(to right, #04D2D3, #7e5ac8); 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.4s ease; 
+}
 
-  button {
-    padding: 10px;
-    background: linear-gradient(to right, #04D2D3, #7e5ac8); 
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    transition: color 0.4s ease; 
-  }
-  
-  button::before, button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    transition: color 0.4s ease, background 0.4s ease, border 0.4s ease;
-  }
-  
-  button::before {
-    background: linear-gradient(to right, #7e5ac8, #04D2D3);
-    transform: translateX(-100%); 
-  }
-  
-  button:hover::before {
-    transform: translateX(0); 
-  }
-  
-  button:hover::after {
-    transform: translateX(0); 
-  }
-  
-  button:hover {
-    color: black; 
-  }
+button::before, button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  transition: color 0.4s ease, background 0.4s ease, border 0.4s ease;
+}
+
+button::before {
+  background: linear-gradient(to right, #7e5ac8, #04D2D3);
+  transform: translateX(-100%); 
+}
+
+button:hover::before {
+  transform: translateX(0); 
+}
+
+button:hover::after {
+  transform: translateX(0); 
+}
+
+button:hover {
+  color: black; 
+}
 
 /*======================================================================
 Botão X
 ======================================================================*/
+.close-button {
+  position: absolute;
+  top: 10px; 
+  right: 10px; 
+  cursor: pointer;
+  z-index: 10;
+}
 
-  .close-button {
-    position: absolute;
-    top: 10px; 
-    right: 10px; 
-    cursor: pointer;
-    z-index: 10;
-  }
-  
-  .close-button i {
-    color: #ffff; 
-    font-size: 30px; 
-  }
-  
-  .close-button:hover i {
-    opacity: 0.8;
-  }
-  
-/*======================================================================
-Campo Date
-======================================================================*/
+.close-button i {
+  color: #ffff; 
+  font-size: 30px; 
+}
 
-  input[type="date"] {
-    padding: 10px;
-    border: 1px solid #aaa;
-    border-radius: 5px;
-    background-color: #aaa;
-    color: #aaa;
-    font-size: 16px;
-  }
-  
-  input[type="date"]::-webkit-calendar-picker-indicator {
-    background-color: transparent; 
-    cursor: pointer; 
-    color: #aaa;
-  }
-  
-  input[type="date"]::-webkit-input-placeholder {
-    color: #aaa;
-    font-size: 15px;
-  }
-
-
+.close-button:hover i {
+  opacity: 0.8;
+}
 
 /*======================================================================
 Icones nos campos
 ======================================================================*/
-
-
-  /* Container para os inputs e ícones */
-  .input-container {
+.input-container {
   position: relative;
   display: flex;
   align-items: center;
+}
+
+.input-container input {
+  margin-bottom: 20px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #222;
+  color: #fff;
+  width: 100%;
+  font-size: 15px;
+}
+
+.input-container .icon-right {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #aaa;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+input::placeholder {
+  font-size: 15px;
+  color: #aaa;
+}
+
+/*======================================================================
+Responsive Layouts
+======================================================================*/
+@media (max-width: 768px) {
+  .login-container {
+      flex-direction: column; /* Empilha as seções de imagem e formulário */
+      height: auto;  /* Ajusta a altura do container */
+  }
+
+  .image-section {
+      display: none;
+  }
+
+  .form-section {
+      flex: 1;
+      padding: 30px;
+  }
+
+  .form-content {
+      max-width: 100%;
+  }
+
+  h2 {
+      font-size: 30px;  /* Reduz o tamanho da fonte */
+  }
+
+  p {
+      font-size: 12px;  /* Aumenta um pouco o tamanho da fonte em telas pequenas */
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+      font-size: 24px;  /* Fontes menores para telas muito pequenas */
   }
 
   .input-container input {
-    margin-bottom: 20px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    background-color: #222;
-    color: #fff;
-    width: 100%;
-    font-size: 15px;
+      font-size: 14px;  /* Tamanho de fonte menor para campos de entrada */
   }
 
-  .input-container .icon-right {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    color: #aaa;
-    font-size: 18px;  /* Tamanho do ícone proporcional */
-    pointer-events: none; /* Não permite interação com o ícone */
-    /*top: 50%;   Centraliza o ícone verticalmente */
-    /*transform: translateY(-50%);   Ajuste fino para centralização */
+  button {
+      padding: 8px;
   }
+  
+}
 
-  input::placeholder {
-    font-size: 15px;
-    color: #aaa;
-  }
+/*======================================================================
+Navbar
+======================================================================*/
+.navbar {
+  background-color: #111 !important;
+  padding: 15px 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.navbar-brand {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #fff !important;
+  font-size: 24px;
+  display: flex;
+}
+
+.navbar-brand .brand-logo {
+  width: 30px; 
+  height: auto; 
+  margin-left: 10px; 
+}
+
+.navbar-nav .nav-link.active {
+  color: #fff;
+}
+
+.nav-item .bi-person-circle {
+  font-size: 24px; /* Aumenta o tamanho do ícone */
+  color: #aaa; /* Define a cor como #aaa */
+}
+
+.nav-item .bi-person-circle:hover {
+  font-size: 25px; 
+  color: #fff; 
+}
+
+.nav-item .bi-wallet2 {
+  font-size: 24px; /* Tamanho do ícone */
+  color: #aaa; /* Cor do ícone */
+  margin-right: 4px; /* Margem à direita para espaçamento do texto */
+}
+
+.nav-item .saldo-conta {
+  font-size: 16px; /* Tamanho do texto */
+  color: #aaa; /* Cor do saldo (ajuste conforme o design da navbar) */
+  font-weight: bold; /* Negrito para destacar o saldo */
+  margin-right: 16px;
+}
+
+.nav-item a {
+  text-decoration: none; /* Remove o sublinhado */
+  color: #aaa; /* Define a cor dos links */
+}
+
+.nav-item a:hover {
+  color: #fff; /* Cor ao passar o mouse */
+}
 
 
 /*======================================================================
-Modal
+Hero 
 ======================================================================*/
-  .modal-content {
-    background-color: #111;
-    border-radius: 10px;     
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);  
-    color: #fff;             
-  }
+.hero-section {
+  background-color: transparent;
+  color: #fff;
+  padding: 100px 0;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  text-align: center;      
+  height: 100vh;           
+}
 
-  .modal-header {
-    border-bottom: none;  
-    padding: 20px;        
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
 
-  .modal-title {
-    font-size: 24px;
-    font-weight: 500;  
-  }
+.hero-text p {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
 
-  .modal-body {
-    padding: 20px;  /* Adicionar padding para manter o espaçamento consistente */
-  }
+.partner-text {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
 
-  /* Estilo do Modal Footer */
-  .modal-footer {
-    border-top: none;  /* Remover a borda superior */
-    padding: 20px;  /* Adicionar padding */
-    justify-content: flex-end;  /* Alinhar o botão à direita */
-  }
+.btn-danger {
+  background-color: #333;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+}
 
-  /* Ajustes no botão do Modal */
-  .modal-footer .btn-secondary {
-    background: linear-gradient(to right, #04D2D3, #7e5ac8);  /* Gradiente para combinar com o botão */
-    color: #fff;  /* Cor do texto */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;  /* Aumentar o tamanho do botão */
-    cursor: pointer;
-  }
+.btn-danger:hover {
+  background-color: #aaa;
+}
 
-  .modal-footer .btn-secondary:hover {
-    background: linear-gradient(to left, #04D2D3, #7e5ac8);  /* Inverter o gradiente no hover */
-  }
 
-  /* Tabela de taxas */
-  .modal-body table {
-    width: 100%;
-    margin-top: 20px;
-  }
 
-  .modal-body table th,
-  .modal-body table td {
-    padding: 10px;
-    text-align: left;
-    background-color: #333;
-    color: #aaa;
-  }
 
-  .modal-body table th {
-    background-color: #333;
-  }
+
+
+.available-events {
+  margin-top: 40px;
+}
+
+.event-card {
+  margin-bottom: 20px;
+}
+
+.card {
+  background-color: #333;
+  border: none;
+  color: #fff;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+
+
+.modal-content {
+  background-color: #1a1a1a; /* Cor de fundo escura */
+  border-radius: 12px; /* Bordas arredondadas */
+  border: none; /* Sem borda */
+  color: #fff; /* Texto branco */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra */
+}
+
+.input-container i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa; /* Cor do ícone dentro do campo */
+}
+
+.input-container input,
+.input-container select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444; /* Borda escura */
+  border-radius: 8px; /* Bordas arredondadas */
+  background-color: #2c2c2c; /* Fundo escuro */
+  color: #ddd; /* Texto claro */
+}
+
+/* Estilo ao focar no campo de entrada */
+.input-container input:focus,
+.input-container select:focus {
+  outline: none;
+  border-color: #00aaff; /* Destaque azul ao focar */
+  background-color: #2c2c2c; /* Manter o fundo escuro ao focar */
+  color: #ddd; /* Manter a cor clara do texto ao focar */
+  box-shadow: 0 0 5px rgba(0, 170, 255, 0.5); /* Sombra azul ao focar */
+}
+
+.input-container i {
+  position: absolute;
+  right: 10px; /* Alinhado à direita do campo */
+  top: 50%;
   
+  color: #aaa; /* Cor do ícone */
+  font-size: 18px; /* Tamanho do ícone */
+}
+
+.input-container input::placeholder {
+  color: #aaa; /* Cor clara para o placeholder */
+}
+
+
+
+
+
+
+
+
+
+
