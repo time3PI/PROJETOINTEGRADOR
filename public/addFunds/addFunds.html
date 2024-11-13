@@ -35,13 +35,13 @@
             </div>
             <label for="nome">Número do Cartão</label>
                 <div class="input-container">
-                    <input type="text" id="cartao" placeholder="Digite o número do cartão" required>
+                  <input type="text" id="cartao" placeholder="0000-0000-0000-0000" required maxlength="19">
                     <i class="bi bi-credit-card icon-right"></i>
             </div>
               
-              <label for="nascimento">Data de Validade</label>
+              <label for="validade">Data de Validade</label>
               <div class="input-container">
-                <input type="date" id="validade" placeholder="dd/mm/aaaa" required>
+                <input type="month" id="validade" placeholder="dd/mm/aaaa" required>
                 <i class="bi bi-calendar-event-fill icon-right"></i>
               </div>
             
@@ -53,7 +53,7 @@
               
               <label for="cvv">CVV</label>
               <div class="input-container">
-                <input type="password" id="cvv" placeholder="Digite o código de segurança" required>
+                <input type="password" id="cvv" placeholder="Digite o código de segurança" required maxlength="3" pattern="\d{3}">
                 <i class="bi bi-lock-fill icon-right"></i>
               </div>
             

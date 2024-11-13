@@ -103,10 +103,7 @@ export namespace withdrawFundsHandler {
 
     export const withdrawFundsHandler: RequestHandler = async (req: Request, res: Response) => {
 
-        const pAgenciaBancaria = req.get('agenciaBancaria');
-        const pNumConta = req.get('numeroConta');
-        const pTipoConta = req.get('tipoConta');
-        const pValor = req.get('valor');
+        const { agenciaBancaria, numeroConta, tipoConta, valor } = req.body;
         const token = req.session.token
 
         if(!token){
@@ -114,8 +111,8 @@ export namespace withdrawFundsHandler {
             return
         }
 
-        if(pAgenciaBancaria && pNumConta && pTipoConta && pValor){
-            const authData = await sacarValorCarteira(token, pValor);
+        if(agenciaBancaria && numeroConta && tipoConta && valor){
+            const authData = await sacarValorCarteira(token, valor);
 
             if (authData !== undefined && authData !== false) {
 
