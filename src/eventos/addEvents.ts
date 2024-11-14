@@ -55,11 +55,7 @@ export namespace addEventsHandler {
 
         // Extrai os parâmetros da requisição HTTP
         const { titulo, desc, dataInicio, dataInicioApostas, horaInicioApostas, dataFimApostas, horaFimApostas } = req.body;
-        // const pTitulo = req.get('titulo');
-        // const pDesc = req.get('desc');
-        // const pDataInicio = req.get('data_inicio');
-        // const pDataHoraInicioApostas = req.get('data_hora_inicio_apostas');
-        // const pDataHoraFimApostas = req.get('data_hora_fim_apostas');
+    
         const token = req.session.token;  // Obtém o token do usuário da sessão
 
         // Verifica se o usuário está autenticado (possui token)

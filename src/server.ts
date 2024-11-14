@@ -17,6 +17,7 @@ import { addFundsHandler } from "./carteira/addFunds";
 import { withdrawFundsHandler } from "./carteira/withdrawFunds";
 import { betOnEventHandler } from "./apostas/betOnEvent";
 import { finishEventHandler } from "./eventos/finishEvent";
+import { checkSessionHandler } from "./usuarios/checkSession";
 
 //configurações de sevidor
 const port = 3000; 
@@ -54,6 +55,7 @@ routes.get('/', (req: Request, res: Response)=>{
 // Rotas de usuarios
 routes.post('/signUp', SignUpHandler.signUpHandler);
 routes.post('/login', LoginHandler.loginHandler);
+routes.get('/checkSession', checkSessionHandler.checkSessionHandler);
 
 // Rotas de eventos
 routes.post('/addNewEvent', addEventsHandler.addNewEventHandler);

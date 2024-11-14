@@ -15,7 +15,7 @@ async function enviarDadosBackend(event) {
 
     if (response.ok) { 
       const message = await response.text();
-      window.location.href = "/home/home.html"; // Redireciona para a página inicial do usuário
+      window.location.href = "/home/index.html"; // Redireciona para a página inicial do usuário
     } else {
       const errorMessage = await response.text();
       alert(errorMessage); // Exibe a mensagem de erro
