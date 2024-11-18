@@ -476,6 +476,120 @@ Hero
   color: #aaa; /* Cor clara para o placeholder */
 }
 
+.available-events {
+  display: flex;
+  flex-direction: column; /* Alinha os elementos na vertical */
+  align-items: center; /* Centraliza os itens no centro */
+}
+
+
+.available-events .populares,
+.available-events .vencimento {
+  margin-top: 10px; /* Espaçamento entre o título e os cards */
+}
+
+.available-events h2 {
+  display: block; /* Garante que o elemento ocupe toda a linha */
+  text-align: center; /* Centraliza o texto */
+  margin-bottom: 10px; /* Espaçamento entre os títulos */
+}
+
+
+
+.populares, .vencimento {
+  display: flex;
+  flex-wrap: wrap; /* Permite que os cards fiquem responsivos */
+  gap: 20px; /* Espaçamento entre os cards */
+  justify-content: center; /* Centraliza os cards */
+}
+
+
+/* Container principal */
+.user-container {
+  display: flex;
+  gap: 50px;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: var(#111); 
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 1200px; /* Limita o tamanho em telas grandes */
+  margin: 0 auto; /* Centraliza na tela */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Adiciona profundidade */
+}
+
+.user-container p{
+  color: #aaa;
+}
+
+.user-container h2{
+  color:#aaa;
+}
+
+.container {
+  background-color: #111; /* Fundo preto */
+  width: 80%; /* Aumentar largura */
+  min-height: 500px; /* Aumentar altura */
+  margin: 50px auto; /* Centralizar */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* Informações do usuário */
+.user-info,
+.transaction-history {
+  flex: 1;
+  color: var(--default-color);
+}
+
+/* Cabeçalhos */
+.user-info h2,
+.transaction-history h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* Textos */
+.user-info p,
+.transaction-history p {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+/* Ajustes para responsividade */
+@media (max-width: 768px) {
+  .user-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+}
+
+.scrollable {
+  max-height: 300px; /* Define altura fixa da parte scrollável */
+  overflow-y: auto; /* Ativa a rolagem vertical */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda para destacar */
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente destacado */
+  border-radius: 5px;
+}
+
+/* Estilo para barra de rolagem */
+.scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background: #111;
+  border-radius: 4px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 
 
 
