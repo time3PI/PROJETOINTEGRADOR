@@ -1,6 +1,6 @@
 //importações dos types
 import express from "express";
-import {Request, Response, Router} from "express";
+import {Request, Response, Router, NextFunction} from "express";
 import session from 'express-session';
 import path from "path";
 import cors from 'cors';
@@ -76,4 +76,23 @@ server.use(routes);
 
 server.listen(port, ()=>{
     console.log(`Servidor no ar na porta: ${port}`);
-}) 
+})
+
+// Middleware para verificar sessão ao acessar as páginas 'index'
+function checkSessionForIndex(req: Request, res: Response, next: NextFunction) {
+    const token = req.session.token;
+
+    if (req.path === 'localhost:3000/home/index.html' && token) {
+        // Se o usuário está logado e tenta acessar 'index.html', redireciona para 'indexlog.html'
+        return res.redirect('/home/indexlog.html');
+    }
+    if (req.path === 'localhost:3000/home/indexlog.html' && !token) {
+        // Se o usuário não está logado e tenta acessar 'indexlog.html', redireciona para 'index.html'
+        return res.redirect('/home/index.html');
+    }
+    // Prossegue para a página solicitada
+    next();
+}
+
+// Usa o middleware antes de servir arquivos estáticos
+server.use(checkSessionForIndex);

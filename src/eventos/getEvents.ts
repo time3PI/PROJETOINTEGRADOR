@@ -16,22 +16,51 @@ export namespace getEventsHandler {
         try {
             // Executa uma consulta SQL diferente com base no valor de 'filtro'
             if (filtro === '1') {
-                // Eventos com status 'aprovado'
-                const result = await conn.execute(
-                    `SELECT *
-                    FROM eventos
-                    WHERE status = 'aprovado'`
+                // Eventos com mias populares com status 'aprovado'
+                const topEventosResult  = await conn.execute(
+                    `SELECT a.id_eventos_fk, COUNT(*) AS quantidade
+                    FROM apostas a
+                    JOIN eventos e ON a.id_eventos_fk = e.id
+                    WHERE e.status = 'aprovado'
+                    GROUP BY a.id_eventos_fk
+                    ORDER BY quantidade DESC
+                    FETCH FIRST 3 ROWS ONLY`
                 );
-                const linhas: any[] | undefined = result.rows;
-                return linhas;
+                
+                const topEventosIds = topEventosResult.rows?.map((row) => (row as [number, number])[0]);
+                
+                if (!topEventosIds || topEventosIds.length === 0) {
+                    throw new Error("Nenhum evento encontrado nas apostas.");
+                }
+
+                const placeholders = topEventosIds.map((_, idx) => `:id${idx}`).join(", ");
+
+                const params: { [key: string]: number } = topEventosIds.reduce((acc, id, idx) => {
+                    acc[`id${idx}`] = id; 
+                    return acc;
+                }, {} as { [key: string]: number }); 
+
+                const eventosResult   = await conn.execute(`
+                    SELECT *
+                    FROM eventos
+                    WHERE id IN (${placeholders})
+                `, params);
+                
+                // console.dir(eventosResult.rows, {depth: null});
+                return eventosResult.rows;
 
             } else if (filtro === '2') {
-                // Eventos com status 'aguarda aprovação'
+                // Eventos mais proximo de finalizar
                 const result = await conn.execute(
                     `SELECT *
                     FROM eventos
-                    WHERE status = 'aguarda aprovação'`
+                    WHERE data_hora_fim_apostas > SYSDATE
+                    AND status = 'aprovado'
+                    ORDER BY data_hora_fim_apostas ASC
+                    FETCH FIRST 3 ROWS ONLY`
                 );
+                
+                console.dir(result.rows, {depth: null});
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
 
@@ -42,6 +71,7 @@ export namespace getEventsHandler {
                     FROM eventos
                     WHERE SYSDATE < data_hora_inicio_apostas
                     AND status = 'aprovado'`
+                    
                 );
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
@@ -81,18 +111,21 @@ export namespace getEventsHandler {
 
     // Função que trata a requisição para obter eventos com base no filtro fornecido
     export const getEventsHandler: RequestHandler = async (req: Request, res: Response) => {
-        const pFiltro = req.get('filtro');  // Obtém o filtro da requisição
+        const { pFiltro }  = req.query;  // Obtém o filtro da requisição
+
+        const filtro = pFiltro as string;
+
 
         /*  Opções de filtro:
-            1 - evento Aprovado
-            2 - Evento suspenso
+            1 - evento populares
+            2 - Evento proximos do vencimento
             3 - Evento futuro
             4 - Evento finalizado
             5 - todos Eventos
         */
 
-        if (pFiltro) {
-            const authData = await filtrarEventos(pFiltro);  // Filtra eventos com base no filtro fornecido
+        if (filtro) {
+            const authData = await filtrarEventos(filtro);  // Filtra eventos com base no filtro fornecido
             if (authData !== undefined) {
                 res.status(200).send({ authData });  // Retorna os eventos filtrados em formato JSON
             } else {
