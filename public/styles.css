@@ -27,6 +27,22 @@ body {
   position: relative;
 }
 
+.event-container {
+  display: flex;
+  flex-wrap: wrap;  /* Permite que os elementos se ajustem em telas menores */
+  width: 90%;  /* Largura adaptável */
+  max-width: 900px;
+  /*height: 600px;*/
+  max-height: 900px;
+  background-color: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+
+
 .image-section {
   flex: 1;
   background: url('img/background.png') no-repeat center center;
@@ -132,7 +148,7 @@ form input::placeholder {
   margin: 0 auto 20px;
 }
 
-/*======================================================================
+/*=====================================================================
 Botão Entrar/Cadastrar
 ======================================================================*/
 button {
@@ -218,7 +234,7 @@ Icones nos campos
 .input-container .icon-right {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 22px;
   color: #aaa;
   font-size: 18px;
   pointer-events: none;
