@@ -20,8 +20,6 @@ export namespace addEventsHandler {
             const idUser = await tokenParaId(token, conn);
             data_inicio = formatarData(data_inicio);
 
-            console.log(data_inicio);
-
             // Insere o evento com os dados fornecidos e o ID do usuário como chave estrangeira
             await conn.execute(
                 `INSERT INTO eventos (id, titulo, descricao, data_inicio, data_hora_inicio_apostas, data_hora_fim_apostas, id_usuarios_fk, status) 
@@ -54,7 +52,7 @@ export namespace addEventsHandler {
 
     // Função que lida com a requisição HTTP para criar um novo evento
     export const addNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
-
+        console.log("chegou aki")
         // Extrai os parâmetros da requisição HTTP
         const { titulo, desc, dataInicio, dataInicioApostas, horaInicioApostas, dataFimApostas, horaFimApostas } = req.body;
     
@@ -67,11 +65,7 @@ export namespace addEventsHandler {
         }
 
         const dataHoraInicioApostas = formatarDataHora(dataInicioApostas, horaInicioApostas);
-        const dataHoraFimApostas = formatarDataHora(dataFimApostas, horaFimApostas);
-
-        console.log(dataHoraFimApostas);
-        console.log(dataHoraInicioApostas);
-        
+        const dataHoraFimApostas = formatarDataHora(dataFimApostas, horaFimApostas);     
 
         // Verifica se todos os parâmetros obrigatórios estão presentes
         if (titulo && desc && dataInicio && dataHoraInicioApostas && dataHoraFimApostas) {

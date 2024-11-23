@@ -17,8 +17,7 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary" >
         <div class="container-fluid">
-            <img src="../img/logo.png" alt="Logo" class="brand-logo">
-            <a class="navbar-brand" href="#">SkyBet</a>
+            <a class="navbar-brand" href="../home/indexLog.html"><i class="bi bi-arrow-left"></i>VOLTAR</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,18 +30,11 @@
                       <span class="saldo-conta">Buscar evento</span>
                     </a>
                   </li>
-
-                  <li class="nav-item">
-                    <a href="../newEvent/newEvent.html">
-                      
-                      <span class="saldo-conta">Add Event</span>
-                    </a>
-                  </li>
-
+                
                   <li class="nav-item">
                     <a href="../account/account.html">
                       <i class="bi bi-wallet2 icon-right"></i>
-                      <span class="saldo-conta valor-conta">R$ 150,00</span>
+                      <span class="saldo-conta valor-conta">R$ 0,00</span>
                     </a>
                   </li>
 
@@ -57,24 +49,27 @@
           </div>
         </div>
     </nav>
-    <div class="body-itens">
 
-      <section class="hero-section">
-        <div class="available-events">
-          <h2>Eventos Mais Populares!</h2>
-          <div class="populares">
-            <!-- Cards de eventos populares aparecerão aqui -->
-          </div>
-        </div>
-        <div class="available-events">
-          <h2>Eventos Próximos do Vencimento!</h2>
-          <div class="vencimento">
-            <!-- Cards de eventos próximos do vencimento aparecerão aqui -->
+    <section class="section">
+        <div class="container">
+          <div class="user-container">
+            <div class="user-info">
+              <h2 class="nome-user">OLÁ, User</h2>
+              <p><strong>Informações:</strong></p>
+              <p>Email: <p class="email-user"></p></p>
+              <p>Saldo: <p class="valor-conta"></p></p>
+            </div>
+            <div class="transaction-history">
+              <h2>HISTÓRICO DE TRANSAÇÕES:</h2>
+              <div class="scrollable">
+                <p>Nenhuma transação nos últimos 60 dias.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-  </div>
-    <script  type="module" src="indexlog.js"></script>
+      
+    
+    <script  type="module" src="account.js"></script>
   </body>
 </html>

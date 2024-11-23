@@ -13,17 +13,17 @@ async function  respostaSecao()  {
             return;
         }
         const data = await response.json(); // Obtém os dados do servidor
-        console.log("Dados do usuário:", data);
 
-        // Atualiza o HTML com os dados do usuário
-        if (data.authData && data.authData.length > 0) {
-            const user = data.authData[0]; // Pega o primeiro (e único) usuário retornado
-            const nome = user[1].split(' ')[0]; // Extrai o primeiro nome do usuário
-            const saldo = user[7]
+        const user = data.authData; // Obtem o objeto do usuário diretamente
 
+        if (user) {
+            const nome = user.NOME.split(' ')[0]; // Extrai o primeiro nome
+            const saldo = user.VALOR_TOTAL; // Obtém o saldo da conta
+
+            // Atualiza o saldo no HTML
             const saldoContaElement = document.querySelector('.valor-conta');
             if (saldoContaElement) {
-                saldoContaElement.textContent = `R$ ${saldo}`; // Formata o saldo
+                saldoContaElement.textContent = `R$ ${saldo.toFixed(2)}`; // Formata o saldo como valor monetário
             }
 
             // Atualiza o nome no HTML
@@ -31,7 +31,6 @@ async function  respostaSecao()  {
             if (nomeUserElement) {
                 nomeUserElement.textContent = `Olá, ${nome}`;
             }
-        
         }
 
     } catch (error) {

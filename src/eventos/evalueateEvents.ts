@@ -159,7 +159,7 @@ export namespace evalueateEventsHandler {
         const pOpcao = req.get('opcao');
         const isAdmin = req.session.isAdmin;  // Verifica se o usuário é um moderador
 
-        if (isAdmin) {
+
             if (pIdEvento && pTextoReprovacao && pOpcao) {
                 if (pOpcao === 'aprovar') {
                     // Aprova o evento
@@ -183,8 +183,5 @@ export namespace evalueateEventsHandler {
             } else {
                 res.status(400).send('Faltando parâmetros');
             }
-        } else {
-            res.status(400).send('Necessário ser moderador para realizar essa ação!');
-        }
     }
 }

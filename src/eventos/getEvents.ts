@@ -60,7 +60,7 @@ export namespace getEventsHandler {
                     FETCH FIRST 3 ROWS ONLY`
                 );
                 
-                console.dir(result.rows, {depth: null});
+                // console.dir(result.rows, {depth: null});
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
 

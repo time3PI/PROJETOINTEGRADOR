@@ -1,6 +1,4 @@
-async function enviarDadosBackend(event) {
-    event.preventDefault(); // Evita o recarregamento da página
-  
+async function enviarDadosBackend() {
     const titulo = document.getElementById("titulo").value;
     const desc = document.getElementById("desc").value;
     const dataInicio = document.getElementById("dataInicio").value;
@@ -21,8 +19,8 @@ async function enviarDadosBackend(event) {
   
       if (response.ok) { 
         const successMessage  = await response.text();
-        alert(successMessage );
-        window.location.href = "/home/home.html"; // Redireciona para a página inicial do usuário
+        alert(successMessage);
+        // Redireciona para a página inicial do usuário
       } else {
 
         const errorMessage = await response.text();
@@ -71,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
+    respostaSecao();
   });
 
   // Verifica se a hora de fim das apostas é maior que a hora de início se as datas forem iguais
@@ -90,3 +89,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+async function respostaSecao() {
+  try {
+      const response = await fetch("/checkSession", { method: "GET", credentials: "include" });
+      console.log("Resposta do servidor:", response); // Adicione esse log
+
+      if (!response.ok) {
+          window.location.assign("http://localhost:3000/home/index.html")
+          return;
+      }
+    } catch (error) {
+      console.error("Erro ao verificar sessão:", error);
+      return false;
+  }
+}
