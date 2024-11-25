@@ -21,13 +21,13 @@ export namespace checkSessionHandler {
                     u.ID_USUARIO, 
                     u.NOME, 
                     u.EMAIL, 
-                    c.VALOR_TOTAL, 
+                    c.VALOR_TOTAL
                 FROM 
-                    usuarios u
+                    usuario u
                 LEFT JOIN 
                     carteira c 
                 ON 
-                    u.ID_USUARIO = c.ID_USUARIOS_FK
+                    u.ID_USUARIO = c.ID_USUARIO_FK
                 WHERE 
                     u.TOKEN = :token`,
                 { token }

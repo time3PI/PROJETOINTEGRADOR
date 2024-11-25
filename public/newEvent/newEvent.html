@@ -15,18 +15,17 @@
 </head>
 <body class="evento-page">
     <div class="event-container">
-      <a href="../home/home.html" class="close-button">
+      <a href="../home/indexLog.html" class="close-button">
           <i class="bi bi-x"></i>
       </a>
       <div class="image-section">
           <div class="text-overlay">
-              <h2>Estamos quase lá!</h2>
+              <h2>Novo Evento!</h2>
               <p>Antes que seu evento apareça na página, ele deverá ser aprovado por um administrador. Caso o evento seja reprovado, você será notificado em seu e-mail.</p>
           </div>
       </div>
       <div class="form-section">
         <div class="form-content">
-          <h2>Novo Evento</h2>
           <form id="newEventForm">
             <label for="titulo">Titulo do Evento</label>
             <div class="input-container">
@@ -68,6 +67,19 @@
             <div class="input-container">
               <input type="time" id="horaFimApostas" required>
               <i class="bi bi-clock-fill icon-right"></i>
+            </div>
+
+            <label for="tipoConta">Tipo da Conta</label>
+            <div class="input-container position-relative">
+              <select id="filterDropdown" class="form-select position-absolute w-100"   >
+                <option value="corrente">olimpiadas</option>
+                <option value="poupanca">catástrofes</option>
+                <option value="eleições">eleições</option>
+                <option value="bolsa de valores">bolsa de valores</option>
+                <option value="futebol">futebol</option>
+                <option value="clima">clima</option>
+                <option value="outros">outros</option>
+              </select>
             </div>
   
             <button type="submit" onclick="enviarDadosBackend()">Cadastrar Evento</button>

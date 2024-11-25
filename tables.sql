@@ -1,93 +1,69 @@
-create table usuarios(
-    id integer primary key,
+create table USUARIO(
+    id_usuario integer primary key,
     nome varchar2(100) not null,
-    email varchar(100) unique not null,
-    senha varchar(100) not null,
+    email varchar2(100) unique not null,
+    senha varchar2(100) not null,
     data_nasc date not null,
     isAdmin number(1) not null,
-    token varchar(10) not null
+    token varchar2(10) not null
 );
+
 CREATE SEQUENCE SEQ_ID_USER
     START WITH 1       
     INCREMENT BY 1;
 
--- COMANDOS SOBRE A TABELA EVENTOS
-create table eventos(
-    id integer primary key,
+create table EVENTO(
+    id_evento integer primary key,
     titulo varchar2(100) not null,
     descricao varchar2(500) not null,
     data_inicio date not null,
     data_hora_inicio_apostas TIMESTAMP not null,
     data_hora_fim_apostas TIMESTAMP not null,
-    id_usuarios_fk integer,
-    status VARCHAR2(20) CHECK (status IN ('aguarda aprovação', 'suspenso', 'aprovado', 'finalizado')) NOT NULL
+    status VARCHAR2(20) CHECK (status IN ('aguarda aprovação', 'suspenso', 'aprovado', 'finalizado')) NOT NULL,
+    categoria VARCHAR2(30) CHECK (categoria IN('olimpíada', 'catástrofes', 'eleições', 'bolsa de valores', 'futebol', 'clima', 'outros')) not null,
+    id_usuario_fk integer,
+    FOREIGN KEY (id_usuario_fk) REFERENCES USUARIO(id_usuario)
     );
 
 CREATE SEQUENCE SEQ_ID_EVENTOS
     START WITH 1       
     INCREMENT BY 1;
 
-
--- comando sobre a tabela apostas
-create table apostas(
-    id integer primary key,
-    id_usuarios_fk integer,
-    id_eventos_fk integer,
-    quant_cotas integer,
-    palpite number(1)
+CREATE TABLE APOSTA (
+    id_usuario_fk INTEGER,
+    id_evento_fk INTEGER,
+    quant_cotas INTEGER NOT NULL,
+    palpite NUMBER(1) NOT NULL,
+    FOREIGN KEY (id_usuario_fk) REFERENCES USUARIO(id_usuario),
+    FOREIGN KEY (id_evento_fk) REFERENCES EVENTO(id_evento),
+    PRIMARY KEY (id_usuario_fk, id_evento_fk)
 );
 
-ALTER TABLE apostas
-ADD CONSTRAINT fk_usuario_apostas
-FOREIGN KEY (id_usuarios_fk)
-REFERENCES usuarios (id);
-
-ALTER TABLE apostas
-ADD CONSTRAINT fk_eventos_apostas
-FOREIGN KEY (id_eventos_fk)
-REFERENCES eventos (id);
-
-CREATE SEQUENCE SEQ_ID_APOSTAS
-    START WITH 1       
-    INCREMENT BY 1;
-
--- comando sobre a tabela carteira
-create table carteira(
-    id integer primary key,
-    valor_total integer,
-    id_usuarios_fk integer
+create table CARTEIRA(
+    id_usuario_fk integer NOT NULL,
+    valor_total integer NOT NULL,
+    FOREIGN KEY (id_usuario_fk) REFERENCES USUARIO(id_usuario),
+    PRIMARY KEY(id_usuario_fk)
 );
 
-ALTER TABLE carteira
-ADD CONSTRAINT fk_usuario_carteria
-FOREIGN KEY (id_usuarios_fk)
-REFERENCES usuarios (id);
-
-CREATE SEQUENCE SEQ_ID_CARTEIRA
-    START WITH 1       
-    INCREMENT BY 1;
-
--- comando sobre a tabela transacoes
-create table transacoes(
-    id integer primary key,
-    valor_total integer not null,
+create table TRANSACAO(
+    id_transacao integer primary key,
+    valor_total decimal(10,2) not null,
     data_transacao date not null,
     tipo varchar2(20) CHECK (tipo IN ('apostado', 'saque', 'adicionado', 'lucro')) NOT NULL,
-    id_carteira_fk integer not null
+    id_carteira_fk integer not null,
+    FOREIGN KEY (id_carteira_fk) REFERENCES CARTEIRA(id_usuario_fk)
 );
 
-ALTER TABLE transacoes
-ADD CONSTRAINT fk_carteira_transacoes
-FOREIGN KEY (id_carteira_fk)
-REFERENCES carteira (id);
-
-CREATE SEQUENCE SEQ_ID_TRANSACOES
+CREATE SEQUENCE SEQ_ID_TRANSACAO
     START WITH 1       
     INCREMENT BY 1;
 
--- SELECTS copia e cola
-select * from usuarios;
-select * from EVENTOS;
-select * from carteira;
-select * from apostas;
-select * from transacoes;
+
+CREATE OR REPLACE TRIGGER trg_insert_carteira
+AFTER INSERT ON USUARIO
+FOR EACH ROW
+BEGIN
+    INSERT INTO CARTEIRA (id_usuario_fk, valor_total)
+    VALUES (:NEW.id_usuario, 0);
+END;

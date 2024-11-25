@@ -20,7 +20,7 @@ export namespace getEventsHandler {
                 const topEventosResult  = await conn.execute(
                     `SELECT a.id_evento_fk, COUNT(*) AS quantidade
                     FROM aposta a
-                    JOIN evento e ON a.id_evento_fk = e.id
+                    JOIN evento e ON a.id_evento_fk = e.id_evento
                     WHERE e.status = 'aprovado'
                     GROUP BY a.id_evento_fk
                     ORDER BY quantidade DESC
@@ -53,7 +53,7 @@ export namespace getEventsHandler {
                 // Eventos mais proximo de finalizar
                 const result = await conn.execute(
                     `SELECT *
-                    FROM eventos
+                    FROM evento
                     WHERE data_hora_fim_apostas > SYSDATE
                     AND status = 'aprovado'
                     ORDER BY data_hora_fim_apostas ASC
@@ -68,7 +68,7 @@ export namespace getEventsHandler {
                 // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
                 const result = await conn.execute(
                     `SELECT *
-                    FROM eventos
+                    FROM evento
                     WHERE SYSDATE < data_hora_inicio_apostas
                     AND status = 'aprovado'`
                     
@@ -80,7 +80,7 @@ export namespace getEventsHandler {
                 // Eventos com status 'finalizado'
                 const result = await conn.execute(
                     `SELECT *
-                    FROM eventos
+                    FROM evento
                     WHERE status = 'finalizado'`
                 );
                 const linhas: any[] | undefined = result.rows;
