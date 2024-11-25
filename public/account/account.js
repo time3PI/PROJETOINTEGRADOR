@@ -1,6 +1,6 @@
-    document.addEventListener('DOMContentLoaded', () => {
-        respostaSecao();
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    respostaSecao();
+});
 
     async function respostaSecao() {
         try {
@@ -69,3 +69,21 @@
             return false;
         }
     }
+
+    async function logOut() {
+        try {
+            const response = await fetch("/logOut", { method: "POST", credentials: "include" });
+            console.log("Resposta do servidor:", response); // Adicione esse log
+
+            if (response.ok) {
+                window.location.assign("http://localhost:3000/home/index.html")
+                return;
+            }else{
+                alert("Erro ao sair da conta!")
+            }
+        } catch (error) {
+            console.error("Erro ao verificar sessão:", error);
+            return false;
+        }
+    }
+    window.logOut = logOut;

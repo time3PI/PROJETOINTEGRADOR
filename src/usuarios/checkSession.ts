@@ -9,6 +9,7 @@ interface UserAuthData {
     EMAIL: string;
     VALOR_TOTAL: number;
     ID_CARTEIRA: number;
+    ISADMIN : number;
 }
 
 export namespace checkSessionHandler {
@@ -20,7 +21,8 @@ export namespace checkSessionHandler {
                 `SELECT 
                     u.ID_USUARIO, 
                     u.NOME, 
-                    u.EMAIL, 
+                    u.EMAIL,
+                    u.isAdmin, 
                     c.VALOR_TOTAL
                 FROM 
                     usuario u
@@ -32,18 +34,17 @@ export namespace checkSessionHandler {
                     u.TOKEN = :token`,
                 { token }
             );
-
             // Verifica se as linhas existem e converte para o tipo esperado
             const rows = result.rows;
             if (rows && rows.length > 0) {
-                const [id, nome, email, valor_total] = rows[0] as [
+                const [id, nome, email, isAdmin, valor_total] = rows[0] as [
                     number,
                     string,
                     string,
                     number,
                     number
                 ];
-                return { ID: id, NOME: nome, EMAIL: email, VALOR_TOTAL: valor_total, ID_CARTEIRA: id };
+                return { ID: id, NOME: nome, EMAIL: email, VALOR_TOTAL: valor_total, ID_CARTEIRA: id, ISADMIN: isAdmin };                
             }
 
             return undefined;

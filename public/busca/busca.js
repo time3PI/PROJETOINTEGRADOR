@@ -1,13 +1,14 @@
-import { respostaSecao } from "../funcoes";
+import { respostaSecao } from "../funcoes.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     respostaSecao();
 });
 
-// Filtragem Dinâmica dos "Quadradinhos"
+// Seleciona elementos necessários
 const filterInput = document.getElementById('filter');
 const gridTable = document.getElementById('grid-table');
 const cardItems = Array.from(gridTable.getElementsByClassName('card-item'));
+const categorySelect = document.getElementById('category-select');
 
 filterInput.addEventListener('keyup', function () {
     const filterValue = filterInput.value.toLowerCase();
@@ -17,25 +18,55 @@ filterInput.addEventListener('keyup', function () {
     });
 });
 
-// Variáveis para paginação
+
+let filteredItems = [...cardItems]; // Itens filtrados, inicialmente todos os itens
 const itemsPerPage = 9;
 let currentPage = 1;
 
-// Atualizar a exibição dos itens
+// Função para renderizar a página atual
 function renderPage(page) {
     const start = (page - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    cardItems.forEach((card, index) => {
+
+    // Exibe somente os itens da página atual
+    filteredItems.forEach((card, index) => {
         card.style.display = index >= start && index < end ? 'block' : 'none';
     });
 
-    // Atualizar estado dos botões de navegação
+    // Atualiza os botões de navegação
     document.getElementById('prev-page').disabled = page === 1;
-    document.getElementById('next-page').disabled = end >= cardItems.length;
+    document.getElementById('next-page').disabled = end >= filteredItems.length;
 
-    // Atualizar o indicador de página
+    // Atualiza o indicador de página
     document.getElementById('page-info').textContent = `Página ${page}`;
 }
+
+// Atualiza os itens exibidos com base no filtro e na categoria
+function updateFilteredItems() {
+    const filterValue = filterInput.value.toLowerCase();
+    const selectedCategory = categorySelect.value.toLowerCase();
+
+    // Filtra itens por texto e categoria
+    filteredItems = cardItems.filter(card => {
+        const text = card.textContent.toLowerCase();
+        const category = card.getAttribute('data-category').toLowerCase();
+
+        const matchesText = text.includes(filterValue);
+        const matchesCategory = selectedCategory === '' || category === selectedCategory;
+
+        return matchesText && matchesCategory;
+    });
+
+    // Reinicia para a página 1 e renderiza
+    currentPage = 1;
+    renderPage(currentPage);
+}
+
+// Adiciona evento de busca dinâmica
+filterInput.addEventListener('keyup', updateFilteredItems);
+
+// Adiciona evento de filtragem por categoria
+categorySelect.addEventListener('change', updateFilteredItems);
 
 // Controles de paginação
 document.getElementById('prev-page').addEventListener('click', () => {
@@ -46,28 +77,11 @@ document.getElementById('prev-page').addEventListener('click', () => {
 });
 
 document.getElementById('next-page').addEventListener('click', () => {
-    if (currentPage * itemsPerPage < cardItems.length) {
+    if (currentPage * itemsPerPage < filteredItems.length) {
         currentPage++;
         renderPage(currentPage);
     }
 });
 
-// Renderizar a primeira página ao carregar
-renderPage(currentPage);
-
-
-//selecao por categoria
-const categorySelect = document.getElementById('category-select');
-categorySelect.addEventListener('change', function () {
-    const selectedCategory = categorySelect.value.toLowerCase();
-    cardItems.forEach(card => {
-        if (selectedCategory === '') {
-        // Mostrar todos os itens
-            card.style.display = 'block';
-        } else {
-            // Mostrar apenas os itens da categoria selecionada
-            const category = card.getAttribute('data-category').toLowerCase();
-        card.style.display = category === selectedCategory ? 'block' : 'none';
-        }
-});
-});
+// Renderiza a primeira página ao carregar
+updateFilteredItems();

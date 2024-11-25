@@ -641,6 +641,8 @@ events.section {
     height: auto;
     width: 100%;           
   
+.admin{
+  display: none;
 }
 
 

@@ -18,6 +18,7 @@ import { withdrawFundsHandler } from "./carteira/withdrawFunds";
 import { betOnEventHandler } from "./apostas/betOnEvent";
 import { finishEventHandler } from "./eventos/finishEvent";
 import { checkSessionHandler } from "./usuarios/checkSession";
+import { logOutHandler } from "./usuarios/logOut";
 
 //configurações de sevidor
 const port = 3000; 
@@ -41,8 +42,8 @@ server.use(
 
 declare module 'express-session' {
     interface SessionData {
-        token: string;
-        isAdmin: boolean;
+        token: string | null;
+        isAdmin: boolean | null;
     }
 }
 
@@ -56,6 +57,7 @@ routes.get('/', (req: Request, res: Response)=>{
 routes.post('/signUp', SignUpHandler.signUpHandler);
 routes.post('/login', LoginHandler.loginHandler);
 routes.get('/checkSession', checkSessionHandler.checkSessionHandler);
+routes.post('/logOut', logOutHandler.logOutHandler);
 
 // Rotas de eventos
 routes.post('/addNewEvent', addEventsHandler.addNewEventHandler);

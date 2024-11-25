@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchEvents('2', '.vencimento');
 });
 
-
-
 export async function fetchEvents(filtro, containerSelector) {
     try {
         const response = await fetch(`http://localhost:3000/getEvents?pFiltro=${filtro}`, {
@@ -20,6 +18,14 @@ export async function fetchEvents(filtro, containerSelector) {
             throw new Error('Erro ao buscar eventos');
         }
         const data = await response.json();
+
+        if (data.isAdmin === 1) {
+            const adminElements = document.querySelectorAll('.admin');
+            adminElements.forEach((element) => {
+                element.style.display = 'block';
+            });
+        }
+
         const events = data.authData.map(event => ({
             id: event[0],
             titulo: event[1],
@@ -57,23 +63,3 @@ function renderEvents(events, containerSelector) {
         container.innerHTML += cardHTML;
     });
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    events.forEach(event => {
-        const cardHTML = `
-            <div class="col-md-4 event-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${event.titulo}</h5>
-                        <p class="card-text">Data início Apostas: ${new Date(event.data_inicio_apostas).toLocaleString('pt-BR')}</p>
-                        <p class="card-text">Data fim: ${new Date(event.data_fim_apostas).toLocaleString('pt-BR')}</p>
-                        <p class="card-text">${event.desc}</p>
-                        <button class="button btn btn-primary" data-bs-toggle="modal" data-bs-target="#apostarModal">Apostar Agora</button>
-                    </div>
-                </div>
-            </div>
-        `;
-        container.innerHTML += cardHTML;
-    });
-});
-

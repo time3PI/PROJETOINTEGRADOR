@@ -10,7 +10,7 @@ export async function registrarTransacao(pIdCarteira: number, valor: number, con
         // Insere uma nova transação na tabela `transacoes` com um ID gerado automaticamente,
         // valor da transação, data atual como `data_transacao`, tipo da transação e referência ao ID da carteira.
         await conn.execute(
-            `INSERT INTO transacao (id, valor_total, data_transacao, tipo, id_carteira_fk) 
+            `INSERT INTO transacao (id_transacao, valor_total, data_transacao, tipo, id_carteira_fk) 
             VALUES (seq_id_transacao.NEXTVAL, :valor, TO_DATE(SYSDATE, 'DD/MM/YYYY'), :tipo, :idCarteira)`,
             {
                 valor: valor,            // Valor da transação
