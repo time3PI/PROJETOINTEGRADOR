@@ -26,7 +26,7 @@ export namespace LoginHandler {
             // Executa a consulta SQL para verificar o email e senha do usuário
             const result = await conn.execute(
                 `SELECT token, isAdmin
-                FROM usuarios
+                FROM usuario
                 where email = :email and senha = :senha`,
                 [email, senha]
             );

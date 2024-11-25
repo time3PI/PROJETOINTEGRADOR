@@ -23,22 +23,16 @@ export namespace addFundsHandler {
             const NumberValor = Number(valor); // Converte o valor para número
             const idUser = await tokenParaId(token, conn); // Obtém o ID do usuário a partir do token
 
-            // Obtém o ID da carteira associado ao usuário
-            const result = await conn.execute<any[]>(
-                `SELECT id
-                FROM carteira
-                WHERE id_usuarios_fk = :idUser`,
-                { idUser: idUser }
-            );
-
-            const idCarteira = result.rows?.[0]?.[0]; // Extrai o ID da carteira
-            console.dir(result.rows, { depth: null }); // Exibe os resultados para depuração
+            if(!idUser){
+                console.log('Erro ao encontrar ususario')
+                return false;
+            }
 
             // Atualiza o valor total da carteira com o novo valor
             await conn.execute(
                 `UPDATE carteira
                 SET valor_total = valor_total + :novo_valor
-                WHERE id_usuarios_fk = :idUser`,
+                WHERE id_usuario_fk = :idUser`,
                 {
                     novo_valor: NumberValor, // Valor a ser adicionado
                     idUser: idUser           // ID do usuário dono da carteira
@@ -46,7 +40,7 @@ export namespace addFundsHandler {
             );
 
             // Registra a transação utilizando a função `registrarTransacao`
-            const transacaoRegistrada = await registrarTransacao(idCarteira, NumberValor, conn, tipo);
+            const transacaoRegistrada = await registrarTransacao(idUser, NumberValor, conn, tipo);
 
             // Se a transação foi registrada com sucesso, confirma as alterações
             if (transacaoRegistrada) {

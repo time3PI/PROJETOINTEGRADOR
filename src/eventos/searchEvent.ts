@@ -23,7 +23,7 @@ export namespace searchEventHandler {
             // Executa a consulta SQL que busca eventos cujo status é "aprovado" e onde o título ou a descrição contêm a palavra-chave.
             const result = await conn.execute(
                 `SELECT *
-                FROM eventos
+                FROM evento
                 WHERE status = 'aprovado'
                 AND (LOWER(titulo) LIKE LOWER(:palavraChave)
                 OR LOWER(descricao) LIKE LOWER(:palavraChave))`,

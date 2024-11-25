@@ -63,12 +63,17 @@ export namespace betOnEventHandler {
             const idEvento = Number(pIdEvento);     // Converte o ID do evento para número
             const palpite = Number(pPalpite);       // Converte o palpite para número
             const idUser = await tokenParaId(token, conn); // Obtém o ID do usuário usando o token
+            
+            if(!idUser){
+                console.log('Erro ao encontrar ususario')
+                return false;
+            }
 
             // Verifica o status do evento para garantir que ele está "aprovado" antes de permitir apostas
             const pStatusEvento = await conn.execute<any[]>(
                 `SELECT status
-                FROM eventos
-                WHERE id = :idEvento`,
+                FROM evento
+                WHERE id_evento = :idEvento`,
                 { idEvento: idEvento }
             );
 
@@ -82,8 +87,8 @@ export namespace betOnEventHandler {
 
             // Insere a nova aposta na tabela `apostas`
             await conn.execute(
-                `INSERT INTO apostas (id, id_usuarios_fk, id_eventos_fk, quant_cotas, palpite) 
-                VALUES (seq_id_apostas.NEXTVAL, :idUser, :idEvento, :quantCotas, :palpite)`,
+                `INSERT INTO aposta (id_usuario_fk, id_evento_fk, quant_cotas, palpite) 
+                VALUES (:idUser, :idEvento, :quantCotas, :palpite)`,
                 {
                     quantCotas: quantCotas,
                     idUser: idUser,
@@ -92,19 +97,8 @@ export namespace betOnEventHandler {
                 }
             );
 
-            // Seleciona o ID da carteira do usuário
-            const arrayId = await conn.execute<any[]>(
-                `SELECT id
-                FROM carteira
-                WHERE id_usuarios_fk = :idUser`,
-                { idUser: idUser }
-            );
-
-            const idCarteira = arrayId.rows?.[0]?.[0]; // Extrai o ID da carteira
-            console.dir(arrayId.rows, { depth: null }); // Exibe o ID da carteira para depuração
-
             // Chama a função `retiraValorCarteira` para descontar a quantia apostada da carteira
-            const valorApostado = await retiraValorCarteira(idCarteira, quantCotas, conn);
+            const valorApostado = await retiraValorCarteira(idUser, quantCotas, conn);
 
             if (valorApostado === true) {
                 await conn.commit(); // Confirma a transação se tudo ocorrer bem

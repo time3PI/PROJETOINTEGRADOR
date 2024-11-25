@@ -20,10 +20,15 @@ export namespace withdrawFundsHandler {
             const valor = Number(pValor);
             const idUser = await tokenParaId(token, conn);
 
+            if(!idUser){
+                console.log('Erro ao encontrar ususario')
+                return false;
+            }
+
             const selectSaldo = await conn.execute<any[]>(
                 `SELECT valor_total
                 FROM carteira
-                WHERE id_usuarios_fk = :idUser`,
+                WHERE id_usuario_fk = :idUser`,
                 {idUser: idUser}
             );
 
@@ -38,17 +43,6 @@ export namespace withdrawFundsHandler {
                 console.log("Não foi possível sacar, saldo insuficiente!");
                 return false;
             }
-
-            const arrayId = await conn.execute<any[]>(
-                `SELECT id
-                FROM carteira
-                WHERE id_usuarios_fk = :idUser`,
-                {idUser: idUser}
-            )
-            
-            const idCarteira = arrayId.rows?.[0]?.[0];
-            
-            console.dir(arrayId.rows, {depth: null});
 
             let valorDescontado = valor
             let taxa = 0
@@ -71,7 +65,7 @@ export namespace withdrawFundsHandler {
             await conn.execute(
                 `UPDATE carteira
                 SET valor_total =  :novo_valor
-                WHERE id_usuarios_fk = :idUser`,
+                WHERE id_usuario_fk = :idUser`,
                 {
                     novo_valor: novo_valor,
                     idUser: idUser
@@ -79,7 +73,7 @@ export namespace withdrawFundsHandler {
             );
 
             const tipo = 'saque' 
-            const transacaoRegistrada = await registrarTransacao(idCarteira, valor, conn, tipo);
+            const transacaoRegistrada = await registrarTransacao(idUser, valor, conn, tipo);
 
             if (transacaoRegistrada) {
                 await conn.commit();

@@ -18,11 +18,11 @@ export namespace getEventsHandler {
             if (filtro === '1') {
                 // Eventos com mias populares com status 'aprovado'
                 const topEventosResult  = await conn.execute(
-                    `SELECT a.id_eventos_fk, COUNT(*) AS quantidade
-                    FROM apostas a
-                    JOIN eventos e ON a.id_eventos_fk = e.id
+                    `SELECT a.id_evento_fk, COUNT(*) AS quantidade
+                    FROM aposta a
+                    JOIN evento e ON a.id_evento_fk = e.id
                     WHERE e.status = 'aprovado'
-                    GROUP BY a.id_eventos_fk
+                    GROUP BY a.id_evento_fk
                     ORDER BY quantidade DESC
                     FETCH FIRST 3 ROWS ONLY`
                 );
@@ -42,8 +42,8 @@ export namespace getEventsHandler {
 
                 const eventosResult   = await conn.execute(`
                     SELECT *
-                    FROM eventos
-                    WHERE id IN (${placeholders})
+                    FROM evento
+                    WHERE id_evento IN (${placeholders})
                 `, params);
                 
                 // console.dir(eventosResult.rows, {depth: null});
@@ -90,7 +90,7 @@ export namespace getEventsHandler {
                 // Todos os eventos, independentemente do status
                 const result = await conn.execute(
                     `SELECT *
-                    FROM eventos`
+                    FROM evento`
                 );
                 const linhas: any[] | undefined = result.rows;
                 return linhas;

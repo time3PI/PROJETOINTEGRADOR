@@ -37,7 +37,8 @@ export async function tokenParaId(token: string, conn: Connection):  Promise<num
 
     try {
         const result = await conn.execute(
-            `SELECT id from usuarios
+            `SELECT id_usuario
+            from usuario
             where token = :token`,
             {
                 token: { val: token },

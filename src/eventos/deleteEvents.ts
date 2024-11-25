@@ -20,10 +20,10 @@ export namespace deleteEventsHandler {
 
             // Atualiza o status do evento para 'suspenso' apenas se o evento estiver em "aguarda aprovação" e pertencer ao usuário autenticado
             await conn.execute(
-                `UPDATE eventos
+                `UPDATE evento
                 SET status = 'suspenso'
-                WHERE id = :idEvento 
-                AND id_usuarios_fk = :idUser 
+                WHERE id_evento = :idEvento 
+                AND id_usuario_fk = :idUser 
                 AND status = 'aguarda aprovação'`,
                 {
                     idEvento: idEvento,

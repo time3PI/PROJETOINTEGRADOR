@@ -18,17 +18,16 @@ export namespace checkSessionHandler {
         try {
             const result = await conn.execute(
                 `SELECT 
-                    u.ID, 
+                    u.ID_USUARIO, 
                     u.NOME, 
                     u.EMAIL, 
                     c.VALOR_TOTAL, 
-                    c.ID AS ID_CARTEIRA
                 FROM 
                     usuarios u
                 LEFT JOIN 
                     carteira c 
                 ON 
-                    u.ID = c.ID_USUARIOS_FK
+                    u.ID_USUARIO = c.ID_USUARIOS_FK
                 WHERE 
                     u.TOKEN = :token`,
                 { token }
@@ -37,14 +36,14 @@ export namespace checkSessionHandler {
             // Verifica se as linhas existem e converte para o tipo esperado
             const rows = result.rows;
             if (rows && rows.length > 0) {
-                const [id, nome, email, valor_total, id_carteira] = rows[0] as [
+                const [id, nome, email, valor_total] = rows[0] as [
                     number,
                     string,
                     string,
                     number,
                     number
                 ];
-                return { ID: id, NOME: nome, EMAIL: email, VALOR_TOTAL: valor_total, ID_CARTEIRA: id_carteira };
+                return { ID: id, NOME: nome, EMAIL: email, VALOR_TOTAL: valor_total, ID_CARTEIRA: id };
             }
 
             return undefined;
@@ -59,12 +58,12 @@ export namespace checkSessionHandler {
         try {
             const result = await conn.execute(
                 `SELECT 
-                    ID,
+                    ID_TRANSACAO,
                     VALOR_TOTAL,
-                    DATA_TRANSACAO AS DATA_TRANSACAO, 
+                    DATA_TRANSACAO, 
                     TIPO,
                     ID_CARTEIRA_FK
-                FROM transacoes 
+                FROM transacao
                 WHERE ID_CARTEIRA_FK = :idCarteira
                 AND DATA_TRANSACAO BETWEEN TO_DATE(SYSDATE - INTERVAL '60' DAY, 'DD/MM/YYYY') AND TO_DATE(SYSDATE, 'DD/MM/YYYY')
                 ORDER BY DATA_TRANSACAO DESC`,

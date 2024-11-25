@@ -21,9 +21,9 @@ export namespace evalueateEventsHandler {
         try {
             // Atualiza o status do evento para 'aprovado'
             await conn.execute(
-                `UPDATE eventos
+                `UPDATE evento
                 SET status = 'aprovado'
-                WHERE id = :idEvento AND status = 'aguarda aprovação'`,
+                WHERE id_evento = :idEvento AND status = 'aguarda aprovação'`,
                 {
                     idEvento: idEvento,
                 }
@@ -50,8 +50,8 @@ export namespace evalueateEventsHandler {
             // Obtém o título do evento e o ID do usuário criador do evento
             const IdUserTituloEventoResult = await conn.execute<any[]>(
                 `SELECT titulo, id_usuarios_fk
-                FROM eventos
-                WHERE id = :idEvento`,
+                FROM evento
+                WHERE id_evento = :idEvento`,
                 {
                     idEvento: idEvento,
                 }
@@ -68,8 +68,8 @@ export namespace evalueateEventsHandler {
             // Obtém o e-mail do usuário que criou o evento
             const emailUserResult = await conn.execute<any[]>(
                 `SELECT email
-                FROM usuarios
-                WHERE id = :idUserEvento`,
+                FROM usuario
+                WHERE id_ususario = :idUserEvento`,
                 {
                     idUserEvento: idUserEvento,
                 }
@@ -124,9 +124,9 @@ export namespace evalueateEventsHandler {
         try {
             // Atualiza o status do evento para 'suspenso'
             await conn.execute(
-                `UPDATE eventos
+                `UPDATE evento
                 SET status = 'suspenso'
-                WHERE id = :idEvento AND status = 'aguarda aprovação'`,
+                WHERE id_evento = :idEvento AND status = 'aguarda aprovação'`,
                 {
                     idEvento: idEvento,
                 }

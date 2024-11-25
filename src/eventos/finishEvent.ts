@@ -25,8 +25,8 @@ export namespace finishEventHandler {
             // Calcula o prêmio total com base na soma das cotas de apostas.
             const selectPremioTotal = await conn.execute<any[]>(`
                 SELECT SUM(quant_cotas)
-                FROM apostas
-                WHERE id_eventos_fk = :idEvento`,
+                FROM aposta
+                WHERE id_evento_fk = :idEvento`,
                 { idEvento: idEvento }
             );
 
@@ -36,8 +36,8 @@ export namespace finishEventHandler {
             // Calcula o total de cotas dos vencedores.
             const selectApostaVencedores = await conn.execute<any[]>(`
                 SELECT SUM(quant_cotas)
-                FROM apostas
-                WHERE id_eventos_fk = :idEvento
+                FROM aposta
+                WHERE id_evento_fk = :idEvento
                 AND palpite = :palpite`,
                 {
                     idEvento: idEvento,
@@ -50,11 +50,11 @@ export namespace finishEventHandler {
 
             // Consulta as cotas por usuário vencedor e armazena os resultados.
             const selectCotacaoPorUsuario = await conn.execute(`
-                SELECT id_usuarios_fk, SUM(quant_cotas)
-                FROM apostas
-                WHERE id_eventos_fk = :idEvento
+                SELECT id_usuario_fk, SUM(quant_cotas)
+                FROM aposta
+                WHERE id_evento_fk = :idEvento
                 AND palpite = :palpite
-                GROUP BY id_usuarios_fk`,
+                GROUP BY id_usuario_fk`,
                 {
                     idEvento: idEvento,
                     palpite: palpite
@@ -69,17 +69,6 @@ export namespace finishEventHandler {
                 // Calcula o valor a ser distribuído para cada vencedor.
                 const novo_valor = (totalCotas / apostaVencedores) * premioTotal;
 
-                // Consulta o ID da carteira do usuário.
-                const arrayId = await conn.execute<any[]>(`
-                    SELECT id
-                    FROM carteira
-                    WHERE id_usuarios_fk = :idUser`,
-                    { idUser: idUser }
-                );
-
-                console.dir(arrayId.rows, { depth: null });
-                
-                const idCarteira = arrayId.rows?.[0]?.[0];
             
                 // Atualiza o saldo total da carteira do usuário vencedor.
                 await conn.execute(`
@@ -92,9 +81,14 @@ export namespace finishEventHandler {
                     }
                 );
 
+                if(!idUser){
+                    console.log('Erro ao encontrar ususario')
+                    return false;
+                }
+                
                 // Registra a transação como um "lucro" para cada vencedor.
                 const tipo = 'lucro';
-                const transacaoRegistrada = await registrarTransacao(idCarteira, novo_valor, conn, tipo);
+                const transacaoRegistrada = await registrarTransacao(idUser, novo_valor, conn, tipo);
 
                 // Em caso de falha ao registrar a transação, exibe erro e retorna `false`.
                 if (!transacaoRegistrada) { 
