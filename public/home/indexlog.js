@@ -57,3 +57,23 @@ function renderEvents(events, containerSelector) {
         container.innerHTML += cardHTML;
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    events.forEach(event => {
+        const cardHTML = `
+            <div class="col-md-4 event-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${event.titulo}</h5>
+                        <p class="card-text">Data início Apostas: ${new Date(event.data_inicio_apostas).toLocaleString('pt-BR')}</p>
+                        <p class="card-text">Data fim: ${new Date(event.data_fim_apostas).toLocaleString('pt-BR')}</p>
+                        <p class="card-text">${event.desc}</p>
+                        <button class="button btn btn-primary" data-bs-toggle="modal" data-bs-target="#apostarModal">Apostar Agora</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.innerHTML += cardHTML;
+    });
+});
+
