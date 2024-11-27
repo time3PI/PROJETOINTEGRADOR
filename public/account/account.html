@@ -33,7 +33,7 @@
           </li>
 
           <li class="nav-item saldo-item">
-            <a href="../busca/busca.html">
+            <a href="http://localhost:3000/busca/busca.html?categoria=11">
               <i class="bi bi-search icon-right"></i>
                 <span class="saldo-conta">Buscar evento</span>
             </a>
@@ -75,7 +75,7 @@
               <p>Saldo: <p class="valor-conta"></p></p>
               <a href="../addFunds/addFunds.html"><button class="button">Adicionar Fundos</button></a>
               <a href="../withdrawFunds/withdrawFunds.html"><button class="button">Saque de Fundos</button></a>
-              <button class="button logout" onclick="logOut()" >Sair</button>
+              <button class="button" onclick="logOut()" >Sair</button>
             </div>
             <div class="transaction-history">
               <h2>HISTÓRICO DE TRANSAÇÕES:</h2>
@@ -87,7 +87,7 @@
         </div>
       </section>
       
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script  type="module" src="account.js"></script>
   </body>
 </html>

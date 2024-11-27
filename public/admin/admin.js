@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const gridTable = document.getElementById("grid-table");
 const notification = document.getElementById("notification");
+const notificationError = document.getElementById("notification-error");
 const rejectModal = new bootstrap.Modal(document.getElementById("rejectModal"));
+const finishModal = new bootstrap.Modal(document.getElementById("finishModal"));
 let currentCard = null; // Variável global para armazenar o cartão atual
 
 // Aprovar evento
@@ -39,9 +41,10 @@ gridTable.addEventListener('click', async (event) => {
 
                 if (response.ok) {
                     showNotification("Evento aprovado!");
+                    window.location.reload();
                 } else {
                     const errorMessage = await response.text();
-                    alert(errorMessage);
+                    showNotificationError(errorMessage);
                 }
             } catch (error) {
                 console.error("Erro ao aprovar evento:", error);
@@ -61,6 +64,16 @@ gridTable.addEventListener("click", (e) => {
         const descriptionText = paragraphs[1].textContent.replace("Descrição:", "").trim();
 
         rejectModal.show();
+    }
+    if (e.target.classList.contains("btn-finalize")) {
+        currentCard = e.target.closest(".card-item"); // Atualiza o cartão atual
+
+        // Pegando os textos dos parágrafos específicos
+        const paragraphs = currentCard.querySelectorAll("p");
+        const eventText = paragraphs[0].textContent.replace("Evento:", "").trim();
+        const descriptionText = paragraphs[1].textContent.replace("Descrição:", "").trim();
+
+        finishModal.show();
     }
 });
 
@@ -84,14 +97,12 @@ document.getElementById("confirm-reject").addEventListener("click", async () => 
                 });
 
                 if (response.ok) {
-                    if (currentCard) {
-                        currentCard.remove(); // Remove o cartão atual
-                    }
-                    rejectModal.hide(); // Fecha o modal
-                    showNotification("Evento reprovado!");
+                    finishModal.hide(); // Fecha o modal
+                    showNotification("Evento Finalizado!");
+                    window.location.reload();
                 } else {
                     const errorMessage = await response.text();
-                    alert(errorMessage); // Exibe a mensagem de erro
+                    showNotificationError(errorMessage); 
                 }
         } catch (error) {
             console.error("Erro ao reprovar evento:", error);
@@ -103,10 +114,58 @@ document.getElementById("confirm-reject").addEventListener("click", async () => 
     }
 });
 
+
+document.getElementById("confirm-finish").addEventListener("click", async () => {
+    const betChoice = document.getElementById("betChoice").value;
+    if (betChoice) {
+        const eventId = currentCard?.querySelector(".btn-finalize")?.getAttribute("data-event-id");
+        document.getElementById('eventId').value = eventId;
+        try {
+                const response = await fetch(`http://localhost:3000/finishEvent`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        opcao: "reprovar",
+                        idEvento: eventId,
+                        palpite: betChoice,
+                    })
+                });
+
+                if (response.ok) {
+                    finishModal.hide(); // Fecha o modal
+                    showNotification("Evento Finalizado!");
+                    window.location.reload();
+                } else {
+                    const errorMessage = await response.text();
+                    showNotificationError(errorMessage); 
+                }
+
+        } catch (error) {
+            showNotificationError(error); 
+        }
+        
+
+    } else {
+        showNotificationError("Por favor, informe o palpite ganhador.");
+    }   
+});
+
+
+
 // Exibir notificação
 function showNotification(message) {
     notification.textContent = message;
     notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
+}   
+
+function showNotificationError(message) {
+    notificationError.textContent = message;
+    notificationError.style.display = "block";
     setTimeout(() => {
         notification.style.display = "none";
     }, 3000);
@@ -183,11 +242,26 @@ function renderEvents(events, containerSelector) {
     const container = document.querySelector(containerSelector);
     if (!container) return;
 
+    const selectedCategory = categorySelect.value.toLowerCase(); // Obtém a categoria selecionada no dropdown
+
     container.innerHTML = ''; // Limpa os eventos existentes
     cards = []; // Reinicia a lista de cards
     filteredItems = []; // Reinicia os cards filtrados
 
     events.forEach(event => {
+        // Define os botões com base na categoria selecionada
+        let buttonsHTML = '';
+        if (selectedCategory === 'avaliar') {
+            buttonsHTML = `
+                <button class="btn btn-gradient btn-approve" data-event-id="${event.id}">Aprovar</button>
+                <button class="btn btn-gradient btn-reject" data-event-id="${event.id}">Reprovar</button>
+            `;
+        } else if (selectedCategory === 'finalizar') {
+            buttonsHTML = `
+                <button class="btn btn-gradient btn-finalize" data-event-id="${event.id}">Finalizar</button>
+            `;
+        }
+
         const cardHTML = `
             <div class="card-item" data-category="${event.categoria}">
                 <h5>${event.titulo}</h5>
@@ -195,9 +269,7 @@ function renderEvents(events, containerSelector) {
                 <p>Data fim: ${new Date(event.data_fim_apostas).toLocaleString('pt-BR')}</p>
                 <p>Categoria: ${event.categoria}</p>
                 <p>Descrição: ${event.desc}</p>
-                <button class="btn btn-gradient btn-approve" data-event-id="${event.id}">Aprovar</button>
-                <button class="btn btn-gradient btn-reject" data-event-id="${event.id}">Reprovar</button>
-
+                ${buttonsHTML} <!-- Botões dinâmicos -->
             </div>
         `;
         container.innerHTML += cardHTML;
@@ -209,6 +281,7 @@ function renderEvents(events, containerSelector) {
 
     showCards(currentPage); // Chama showCards para exibir a primeira página
 }
+
 
 // Função de filtragem
 const filterInput = document.getElementById('filter');

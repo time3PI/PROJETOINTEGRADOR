@@ -72,7 +72,7 @@ export namespace addEventsHandler {
             const authData = await InserirEvento(titulo, desc, dataInicio, dataHoraInicioApostas, dataHoraFimApostas, categoria, token);
 
             // Caso o evento tenha sido inserido com sucesso, envia uma resposta de sucesso
-            if (authData !== undefined && authData !== false) {
+            if (authData) {
                 res.status(200).send("Novo evento adicionado com sucesso!");
             } else {
                 res.status(500).send("Falha ao inserir dados no sistema");  // Em caso de erro, responde com status 500

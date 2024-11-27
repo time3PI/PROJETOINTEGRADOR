@@ -11,6 +11,7 @@ export namespace betOnEventHandler {
     async function retiraValorCarteira(idCarteira: number, quant_cotas: number, conn: Connection): Promise<boolean | undefined> {
 
         try {
+            
             // Seleciona o valor total da carteira com base no ID fornecido
             const result = await conn.execute<any[]>(
                 `SELECT valor_total
@@ -93,10 +94,14 @@ export namespace betOnEventHandler {
                 if (transacaoRegistrada) {
                     await conn.commit();
                     return true;
-                } else {
-                    console.error('Carteira não encontrada ou falha ao registrar a transação.');
+                } else if(transacaoRegistrada === false){
+                    console.error('Sem saldo suficiente');
                     return false;
-            }
+                }else{
+                    console.error('Carteira não encontrada ou falha ao registrar a transação.');
+                    return undefined;
+                }
+
             } else {
                 console.error('Carteira não encontrada ou falha ao registrar a transação.');
                 return false;
@@ -136,12 +141,20 @@ export namespace betOnEventHandler {
         if (quantCotas && idEvento && palpite) {
             const authData = await realizarAposta(token, quantCotas, idEvento, palpite);
 
+            if(authData === false){
+               res.status(400).send(`Sem saldo para realizar a aposta!`);
+               return;
+            }
+
             // Se a aposta for bem-sucedida, envia uma resposta de sucesso
-            if (authData !== undefined && authData !== false) {
+            if (authData) {
                 res.status(200).send(`Aposta realizada com sucesso!`);
+                return;
+
             } else {
                 // Caso contrário, envia uma resposta de erro
-                res.status(500).send("Falha ao inserir dados no sistema");
+                res.status(500).send("Você já realizou uma aposta nesse evento!");
+                return;
             }
         } else {
             // Se algum parâmetro estiver faltando ou for inválido, envia uma resposta de erro

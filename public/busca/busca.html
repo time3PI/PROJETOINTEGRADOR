@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="stylesBuscas.css">
     <link rel="stylesheet" href="../styles.css">
     <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar com opções clicáveis -->
@@ -32,7 +32,7 @@
               </li>
 
               <li class="nav-item saldo-item">
-                <a href="../busca/busca.html">
+                <a href="http://localhost:3000/busca/busca.html?categoria=11">
                   <i class="bi bi-search icon-right"></i>
                     <span class="saldo-conta">Buscar evento</span>
                 </a>
@@ -63,7 +63,7 @@
           </div>
         </div>
       </nav>
-    <br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br>
     <!-- Conteúdo Principal -->
     <div class="content-container">
         <div class="table-container">
@@ -90,14 +90,14 @@
             </div>
         </div>
         <div class="pagination-container">
-            <button id="prev-page" class="button" disabled>Anterior</button>
+            <button id="prev-page" class="btn btn-primary" disabled>Anterior</button>
             <span id="page-info">Página 1</span>
-            <button id="next-page" class="button">Próximo</button>
+            <button id="next-page" class="btn btn-primary">Próximo</button>
         </div>
         
     </div>
 
-     <!-- Modal -->
+    <!-- Modal -->
     <div class="modal fade" id="betModal" tabindex="-1" aria-labelledby="betModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -123,13 +123,14 @@
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="button" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="button" id="confirmBet">Confirmar Aposta</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="confirmBet">Confirmar Aposta</button>
             </div>
           </div>
         </div>
       </div>
-
+      <div class="notification" id="notification">Evento aprovado!</div>
+      <div class="notification-error" id="notification-error"></div>
     <script type="module" src ="busca.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

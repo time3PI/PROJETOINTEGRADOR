@@ -74,7 +74,7 @@ export namespace finishEventHandler {
                 await conn.execute(`
                     UPDATE carteira
                     SET valor_total = valor_total + :novo_valor
-                    WHERE id_usuarios_fk = :idUser`,
+                    WHERE id_usuario_fk = :idUser`,
                     {
                         novo_valor: novo_valor,
                         idUser: idUser
@@ -99,9 +99,9 @@ export namespace finishEventHandler {
         
             // Atualiza o status do evento para "finalizado".
             await conn.execute(`
-                UPDATE eventos
+                UPDATE evento
                 SET status = 'finalizado'
-                WHERE id = :idEvento`,
+                WHERE id_evento = :idEvento`,
                 { idEvento: idEvento }
             );
 
@@ -125,15 +125,14 @@ export namespace finishEventHandler {
     export const finishEventHandler: RequestHandler = async (req: Request, res: Response) => {
 
         // Obtém o ID do evento e o palpite vencedor dos cabeçalhos da requisição.
-        const pIdEvento = req.get('idEvento');
-        const pPalpite = req.get('palpiteGanhador');
+        const { idEvento, palpite } = req.body;
         const isAdmin = req.session.isAdmin; // Verifica se o usuário é administrador.
 
         // Verifica se o usuário é administrador e os parâmetros estão corretos.
         if (isAdmin) {
-            if (pIdEvento && pPalpite) {
+            if (idEvento && palpite) {
                 // Tenta finalizar o evento.
-                const authData = await finalizarEvento(pIdEvento, pPalpite);
+                const authData = await finalizarEvento(idEvento, palpite);
                 
                 // Se a operação for bem-sucedida, envia status 200 com mensagem de sucesso.
                 if (authData !== undefined) {

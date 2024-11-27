@@ -6,7 +6,7 @@ export async function registrarTransacao(pIdCarteira: number, valor: number, con
     try {
         // Converte o ID da carteira para número.
         const idCarteira = Number(pIdCarteira);
-
+        
         // Insere uma nova transação na tabela `transacoes` com um ID gerado automaticamente,
         // valor da transação, data atual como `data_transacao`, tipo da transação e referência ao ID da carteira.
         await conn.execute(

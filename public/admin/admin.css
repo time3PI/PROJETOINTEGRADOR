@@ -183,6 +183,19 @@ z-index: 1000;
 display: none;
 }
 
+.notification-error {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: #ae1e1e;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+}
+
 /* Estilo da Paginação */
 .pagination-container {
 margin-top: 20px;

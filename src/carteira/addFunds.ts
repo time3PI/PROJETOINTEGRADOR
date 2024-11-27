@@ -69,10 +69,16 @@ export namespace addFundsHandler {
         // Obtém os parâmetros do cartão e valor do corpo da requisição
         const {  nomeCartao, numCartao, dataValidade, valor, cvv } = req.body;
         const token = req.session.token; // Obtém o token do usuário da sessão
+        const isAdmin = req.session.isAdmin;
 
         // Verifica se o usuário está autenticado
-        if (token === undefined || token === null) {
+        if (!token) {
             res.status(400).send("Necessário realizar Login para esta ação");
+            return;
+        }
+
+        if (isAdmin) {
+            res.status(400).send("Moderadores não podem realizar esta ação!");
             return;
         }
 

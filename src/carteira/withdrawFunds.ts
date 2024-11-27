@@ -98,11 +98,17 @@ export namespace withdrawFundsHandler {
     export const withdrawFundsHandler: RequestHandler = async (req: Request, res: Response) => {
 
         const { agenciaBancaria, numeroConta, tipoConta, valor } = req.body;
-        const token = req.session.token
+        const token = req.session.token;
+        const isAdmin = req.session.isAdmin;
 
         if(!token){
             res.status(400).send("Necessario realizar Login para esta ação");
             return
+        }
+
+        if (isAdmin) {
+            res.status(400).send("Moderadores não podem realizar esta ação!");
+            return;
         }
 
         if(agenciaBancaria && numeroConta && tipoConta && valor){

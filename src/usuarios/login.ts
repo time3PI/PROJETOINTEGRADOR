@@ -50,7 +50,6 @@ export namespace LoginHandler {
         } catch (err) {
             // Lida com erros de execução da consulta SQL
             console.error('Erro ao executar login:', err);
-            await conn.rollback();  // Faz rollback em caso de erro
             return undefined;
 
         } finally {

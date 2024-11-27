@@ -2,10 +2,12 @@ export async function  respostaSecao()  {
     try {
         const response = await fetch("/checkSession", { method: "GET", credentials: "include" });
         console.log("Resposta do servidor:", response); // Adicione esse log
+
         if (!response.ok) {
             window.location.assign("http://localhost:3000/home/index.html")
             return;
         }
+        
         const data = await response.json(); // Obtém os dados do servidor
 
         const user = data.authData; // Obtem o objeto do usuário diretamente

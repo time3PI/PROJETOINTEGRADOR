@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {respostaSecao();});
+document.addEventListener('DOMContentLoaded', () => {
+  respostaSecao();});
+  
+const notification = document.getElementById("notification");
+const notificationError = document.getElementById("notification-error");
 async function enviarDadosBackend() {
     const titulo = document.getElementById("titulo").value;
     const desc = document.getElementById("desc").value;
@@ -8,6 +12,35 @@ async function enviarDadosBackend() {
     const dataFimApostas = document.getElementById("dataFimApostas").value;
     const horaFimApostas = document.getElementById("horaFimApostas").value;
     const categoria = document.getElementById("filterDropdown").value;
+
+    const hoje = new Date().toISOString().split("T")[0]; // Data atual no formato YYYY-MM-DD
+
+    if (!titulo || !desc || !dataInicio || !dataInicioApostas || !horaInicioApostas || !dataFimApostas || !horaFimApostas || !categoria) {
+      showNotificationError("Por favor, preencha todos os campos antes de continuar.");
+      return;
+    }
+
+    // Verifica se a data de início é válida
+    if (dataInicio < hoje) {
+        showNotificationError("A data de início do evento não pode ser anterior à data atual.");
+        return;
+    }
+
+    // Verifica se a data de início das apostas é válida
+    if (dataInicioApostas < hoje) {
+        showNotificationError("A data de início das apostas não pode ser anterior à data atual.");
+        return;
+    }
+
+    if (dataInicioApostas > dataInicio) {
+        showNotificationError("A data de início das apostas deve ser menor ou igual à data de início do evento.");
+        return;
+    }
+
+    if (dataFimApostas < dataInicioApostas || dataFimApostas > dataInicio) {
+      showNotificationError("A data de fim das apostas deve estar entre a data de início das apostas e a data de início do evento.");
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3000/addNewEvent", {
@@ -20,18 +53,15 @@ async function enviarDadosBackend() {
       });
   
       if (response.ok) {
-        const successMessage  = await response.text();
-        alert(successMessage);
-        alert(successMessage);
-        // Redireciona para a página inicial do usuário
-      } else {
+        showNotification("Evento criado com susceeso!");
 
+      } else {
         const errorMessage = await response.text();
-        alert(errorMessage); // Exibe a mensagem de erro
+        showNotificationError(errorMessage);
 
       }
     } catch (error) {
-      console.error("Erro na requisição de cadastro:", error);
+      showNotificationError(error);
     }
   }
   
@@ -106,4 +136,21 @@ async function respostaSecao() {
       console.error("Erro ao verificar sessão:", error);
       return false;
   }
+}
+
+// Exibir notificação
+function showNotification(message) {
+    notification.textContent = message;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
+}   
+
+function showNotificationError(message) {
+    notificationError.textContent = message;
+    notificationError.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
 }

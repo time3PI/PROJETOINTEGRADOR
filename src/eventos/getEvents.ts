@@ -171,7 +171,8 @@ export namespace getEventsHandler {
                     `SELECT *
                     FROM evento
                     WHERE status = 'aprovado'
-                    order by id_evento` 
+                    ORDER BY data_inicio ASC, id_evento ASC
+                    ` 
                 );
                 // console.dir(result.rows, {depth: null});
                 const linhas: any[] | undefined = result.rows;

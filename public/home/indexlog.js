@@ -4,7 +4,37 @@ document.addEventListener('DOMContentLoaded', () => {
     respostaSecao();
     fetchEvents('1', '.populares'); // Eventos mais populares
     fetchEvents('2', '.vencimento');
+
+    document.querySelectorAll('.available-events').forEach(container => {
+        container.addEventListener('click', (event) => {
+            // Verifica se o clique foi em um botão com a classe 'bet-button'
+            if (event.target && event.target.classList.contains('bet-button')) {
+                const eventId = event.target.getAttribute('data-event-id');
+                document.getElementById('eventId').value = eventId;  // Preenche o campo com o id do evento
+            }
+        });
+    });
 });
+
+const notification = document.getElementById("notification");
+const notificationError = document.getElementById("notification-error");
+
+// Exibir notificação
+function showNotification(message) {
+    notification.textContent = message;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
+}   
+
+function showNotificationError(message) {
+    notificationError.textContent = message;
+    notificationError.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
+}
 
 export async function fetchEvents(filtro, containerSelector) {
     try {
@@ -59,25 +89,33 @@ function renderEvents(events, containerSelector) {
     });
 }
 
-// Adiciona eventos de clique aos botões "Apostar"
-document.querySelector('.available-events').addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('bet-button')) {
-        const eventId = event.target.getAttribute('data-event-id');
-        document.getElementById('eventId').value = eventId;
-    }
-});
+// // Adiciona eventos de clique aos botões "Apostar"
+// document.querySelector('.available-events').addEventListener('click', (event) => {
+//     if (event.target && event.target.classList.contains('bet-button')) {
+//         const eventId = event.target.getAttribute('data-event-id');
+//         document.getElementById('eventId').value = eventId;
+//         alert(eventId);
+//     }
+// });
 
 document.getElementById('confirmBet').addEventListener('click', async () => {
     let quantCotas = document.getElementById('betValue').value;
     const palpite = document.getElementById('betChoice').value;
     const idEvento = document.getElementById('eventId').value;
 
-    if (!quantCotas || !palpite) {
-        alert('Preencha todos os campos antes de confirmar a aposta.');
+    if (!quantCotas || !palpite || !idEvento) {
+        showNotificationError('Preencha todos os campos antes de confirmar a aposta.');
+        return;
+    }   
+
+    quantCotas = parseFloat(quantCotas);
+
+    // Certificando que os valores estão corretos
+    if (isNaN(quantCotas) || quantCotas <= 0) {
+        showNotificationError('Valor da aposta inválido.');
         return;
     }
 
-    quantCotas = parseFloat(quantCotas);
     try {
         const response = await fetch('http://localhost:3000/betOnEvent', {
             method: 'POST',
@@ -85,25 +123,23 @@ document.getElementById('confirmBet').addEventListener('click', async () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                quantCotas: quantCotas,
-                idEvento: idEvento,
-                palpite: palpite
+                quantCotas: String(quantCotas),  // Enviar como string
+                idEvento: String(idEvento),      // Enviar como string
+                palpite: String(palpite)         // Enviar como string
             })
         });
 
         if (response.ok) {
-            const message = await response.text();
-            alert(message);
+            showNotification("Aposta Realizada!");
             document.getElementById('betForm').reset(); // Reseta o formulário
             const modal = bootstrap.Modal.getInstance(document.getElementById('betModal'));
             modal.hide(); // Fecha o modal
-            window.location.reload();
         } else {
             const errorMessage = await response.text();
-            alert(errorMessage); // Exibe a mensagem de erro
+            showNotificationError(errorMessage);
         }
 
     } catch (error) {
-        console.error("Erro na requisição de aposta: ", error);
+        showNotificationError("Erro ao realizar a aposta: " + error);
     }
 });

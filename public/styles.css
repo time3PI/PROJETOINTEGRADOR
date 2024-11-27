@@ -21,6 +21,33 @@ body {
   display: none;
 }
 
+/* Notificação */
+.notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none;
+  }
+  
+.notification-error {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: #ae1e1e;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: none;
+}
+
 /*======================================================================
 Login Container
 ======================================================================*/
@@ -533,6 +560,7 @@ Available Events
   display: flex;
   flex-direction: column; 
   align-items: center; 
+  flex-wrap: wrap; /* Permite que os itens quebrem linha */
 }
 
 .available-events .populares,
@@ -659,6 +687,13 @@ Seção Categorias
   font-size: 2rem;
 }
 
+.hero-section h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin-top: 37rem;
+}
+
 .cards-wrapper {
   display: flex;
   justify-content: center;
@@ -707,12 +742,12 @@ Seção Categorias
 
 .carousel-control-prev {
   left: 15rem;
-  margin-top: 15rem;
+  margin-top: 0rem;
 }
 
 .carousel-control-next {
   right: 15rem; 
-  margin-top: 15rem;
+  margin-top: 0rem;
 }
 
 .carousel-control-prev-icon,
@@ -721,23 +756,121 @@ Seção Categorias
 }
 
 .carousel-item {
-  margin-top: 30rem;  /* Ajuste conforme necessário */
+  margin-top: 0rem;  /* Ajuste conforme necessário */
+  flex: 0 0 100%; /* Cada slide ocupa 100% da largura no mobile */
+  max-width: 100%; /* Garante que não exceda a largura */
+  text-align: center; /* Opcional: centraliza o conteúdo dentro do slide */
 }
+
+.carousel {
+  width: 100%; /* Garante que o carrossel ocupa 100% da largura */
+  margin: 0 auto; /* Centraliza o carrossel */
+  overflow: hidden; /* Evita que conteúdo extra seja visível */
+}
+
 
 @media (max-width: 768px) {
   .card-car {
     flex: 0 0 calc(50% - 1rem); 
   }
 
-  .carousel-control-prev,
-  .carousel-control-next {
+  .carousel-control-prev {
     left: 0.5rem;
     right: 0.5rem;
+  }
+
+  .carousel-control-next {
+    right: 0.5rem;
+
+  }
+  .carousel-item {
+    margin-top: 0rem;  /* Ajuste conforme necessário */
+    flex: 0 0 100%; /* Cada slide ocupa 100% da largura no mobile */
+    max-width: 100%; /* Garante que não exceda a largura */
+    text-align: center; /* Opcional: centraliza o conteúdo dentro do slide */
+  }
+
+  .hero-section h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-top: 110rem;
   }
 }
 
 @media (max-width: 576px) {
   .card-car {
     flex: 0 0 100%; 
+  }
+}
+
+@media (max-width: 768px) {
+  .populares, .vencimento {
+    gap: 10px; /* Reduz o espaçamento entre os cards */
+  }
+
+  .col-md-4 {
+    flex: 0 0 100%; /* Cada card ocupa 100% da largura */
+    max-width: 100%; /* Garante que eles não ultrapassem a largura do container */
+    margin-bottom: 1rem; /* Adiciona espaçamento entre os cards */
+  }
+
+}
+
+@media (max-width: 480px) {
+  .col-md-4 {
+    flex: 0 0 100%; /* 1 card por linha */
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 32px; /* Reduz o título */
+  }
+
+  .hero-text p {
+    font-size: 14px; /* Reduz o parágrafo */
+  }
+}
+
+@media (max-width: 768px) {
+  .card-car {
+    flex: 0 0 calc(50% - 1rem); /* 2 cards por linha */
+  }
+}
+
+@media (max-width: 480px) {
+  .card-car {
+    flex: 0 0 100%; /* 1 card por linha */
+    margin-bottom: 1rem; /* Espaçamento entre cards */
+  }
+}
+
+@media (max-width: 576px) {
+  .card-car {
+    flex: 0 0 calc(50% - 1rem); 
+  }
+
+  .carousel-control-prev {
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .carousel-control-next {
+    right: 0.5rem;
+
+  }
+  .carousel-item {
+    margin-top: 0rem;  /* Ajuste conforme necessário */
+    flex: 0 0 100%; /* Cada slide ocupa 100% da largura no mobile */
+    max-width: 100%; /* Garante que não exceda a largura */
+    text-align: center; /* Opcional: centraliza o conteúdo dentro do slide */
+  }
+
+  .hero-section h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-top: 110rem;
   }
 }

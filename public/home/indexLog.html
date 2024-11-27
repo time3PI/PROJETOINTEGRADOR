@@ -31,8 +31,8 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <a href="../busca/busca.html">
+          <li class="nav-item saldo-item">
+            <a href="http://localhost:3000/busca/busca.html?categoria=11">
               <i class="bi bi-search icon-right"></i>
                 <span class="saldo-conta">Buscar evento</span>
             </a>
@@ -64,6 +64,7 @@
     </div>
   </nav>
   <main>
+    <br><br>
     <section class="hero-section">
       <div class="row align-items-center">
         <div class="hero-text">
@@ -74,7 +75,7 @@
         </div>
       </div>
     </section>
-    
+    <br><br><br>
     <section class="hero-section">
       <div class="available-events">
         <h2>Eventos Mais Populares!</h2>
@@ -82,6 +83,7 @@
             <!-- Cards de eventos populares aparecerão aqui -->
         </div>
       </div>
+      <br><br>
       <div class="available-events">
         <h2>Eventos Próximos do Vencimento!</h2>
           <div class="vencimento">
@@ -93,7 +95,7 @@
 
     <!-- Carrossel de Cards -->
     <section class="hero-section">
-      <h2>Navegue por categoria</h2>
+      <h3>Navegue por categoria</h3>
       <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
           <!-- Slide 1 -->
@@ -106,7 +108,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Olimpíadas</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=3" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
               <div class="card-car">
@@ -116,7 +118,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Catástrofes</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=4" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
               <div class="card-car">
@@ -126,7 +128,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Eleições</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=5" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
             </div>
@@ -141,7 +143,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Bolsa de Valores</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=6" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
               <div class="card-car">
@@ -151,7 +153,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Futebol</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=7" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
               <div class="card-car">
@@ -161,7 +163,7 @@
                 <div class="card-body">
                   <h5 class="card-title">Clima</h5>
                   <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
-                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                  <a href="http://localhost:3000/busca/busca.html?categoria=8" class="btn btn-primary">Saiba mais</a>
                 </div>
               </div>
             </div>
@@ -180,25 +182,41 @@
     
     
 
-    <div class="modal fade" id="apostarModal" tabindex="-1" aria-labelledby="apostarModalLabel" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="betModal" tabindex="-1" aria-labelledby="betModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="apostarModalLabel">Apostar Agora</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <!-- Conteúdo do modal -->
-                  Aqui vai o conteúdo para apostar.
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-primary">Confirmar</button>
-              </div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="betModalLabel">Faça sua Aposta</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            <form id="betForm">
+              <div class="mb-3">
+                <label for="betValue" class="form-label">Valor da Aposta</label>
+                <input type="number" class="form-control" id="betValue" min="1" placeholder="Digite o valor" required>
+              </div>
+              <div class="mb-3">
+                <label for="betChoice" class="form-label">Seu Palpite</label>
+                <select class="form-select" id="betChoice" required>
+                  <option value="" selected disabled>Escolha uma opção</option>
+                  <option value="1">Sim</option>
+                  <option value="0">Não</option>
+                </select>
+              </div>
+              <input type="hidden" id="eventId" value="">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="confirmBet">Confirmar Aposta</button>
+          </div>
+        </div>
       </div>
-    </div>
-    <script  type="module" src="indexlog.js"></script>
+    </div>  
+    <div class="notification" id="notification"></div>
+    <div class="notification-error" id="notification-error"></div>
+    <script type="module" src="indexlog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -49,13 +49,12 @@
 
             <label for="tipoConta">Tipo da Conta</label>
             <div class="input-container position-relative">
-              <select id="filterDropdown" class="form-select position-absolute w-100" style="top: 100%;">
+              <select id="filterDropdown" class="form-select w-100" style="top: 100%;">
                 <option value="corrente">Corrente</option>
                 <option value="poupanca">Poupança</option>
               </select>
             </div>
-
-            <br><br>
+            <br>
              <label for="valor">Valor</label>
              <div class="input-container">
               <input type="text" id="valor" placeholder="Digite o valor a ser retirado" required>
@@ -112,6 +111,25 @@
           </div>
         </div>
       </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="betModal" tabindex="-1" aria-labelledby="betModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="betModalLabel">Você irá receber R$ <span id="valorDescontadoModal">0.00</span> (taxa aplicada: R$ <span id="taxaModal">0.00</span>). Deseja continuar?</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="confirmButton">Sim</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Não</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    <div class="notification-error" id="notification-error"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="withdrawFunds.js"></script>
   </body>
