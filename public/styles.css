@@ -1,3 +1,6 @@
+/*======================================================================
+Estilos Globais
+======================================================================*/
 * {
   margin: 0;
   padding: 0;
@@ -14,6 +17,14 @@ body {
   justify-content: center;
 }
 
+.admin{
+  display: none;
+}
+
+/*======================================================================
+Login Container
+======================================================================*/
+
 .login-container {
   display: flex;
   flex-wrap: wrap;  /* Permite que os elementos se ajustem em telas menores */
@@ -26,6 +37,10 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   position: relative;
 }
+
+/*======================================================================
+Event Container
+======================================================================*/
 
 .event-container {
   display: flex;
@@ -41,7 +56,9 @@ body {
   position: relative;
 }
 
-
+/*======================================================================
+Image Section
+======================================================================*/
 
 .image-section {
   flex: 1;
@@ -149,7 +166,7 @@ form input::placeholder {
 }
 
 /*=====================================================================
-Botão Entrar/Cadastrar
+Botão Principal
 ======================================================================*/
 button {
   padding: 10px;
@@ -190,6 +207,10 @@ button:hover::after {
 
 button:hover {
   color: black; 
+}
+
+.btn{
+  margin-bottom: 10px;
 }
 
 /*======================================================================
@@ -250,8 +271,8 @@ Responsive Layouts
 ======================================================================*/
 @media (max-width: 768px) {
   .login-container {
-      flex-direction: column; /* Empilha as seções de imagem e formulário */
-      height: auto;  /* Ajusta a altura do container */
+      flex-direction: column; 
+      height: auto;  
   }
 
   .image-section {
@@ -268,21 +289,21 @@ Responsive Layouts
   }
 
   h2 {
-      font-size: 30px;  /* Reduz o tamanho da fonte */
+      font-size: 30px;  
   }
 
   p {
-      font-size: 12px;  /* Aumenta um pouco o tamanho da fonte em telas pequenas */
+      font-size: 12px;  
   }
 }
 
 @media (max-width: 480px) {
   h2 {
-      font-size: 24px;  /* Fontes menores para telas muito pequenas */
+      font-size: 24px;  
   }
 
   .input-container input {
-      font-size: 14px;  /* Tamanho de fonte menor para campos de entrada */
+      font-size: 14px;  
   }
 
   button {
@@ -332,37 +353,35 @@ Navbar
 }
 
 .nav-item .bi-person-circle {
-  font-size: 24px; /* Aumenta o tamanho do ícone */
-  color: #aaa; /* Define a cor como #aaa */
-}
-
-.nav-item .bi-person-circle:hover {
-  font-size: 25px; 
-  color: #fff; 
+  font-size: 24px; 
+  color: #aaa; 
 }
 
 .nav-item .bi-wallet2 {
-  font-size: 24px; /* Tamanho do ícone */
-  color: #aaa; /* Cor do ícone */
-  margin-right: 4px; /* Margem à direita para espaçamento do texto */
+  font-size: 24px; 
+  color: #aaa; 
+  margin-right: 4px; 
 }
 
 .nav-item .saldo-conta {
-  font-size: 16px; /* Tamanho do texto */
-  color: #aaa; /* Cor do saldo (ajuste conforme o design da navbar) */
-  font-weight: bold; /* Negrito para destacar o saldo */
+  font-size: 16px; 
+  color: #aaa; 
+  font-weight: bold; 
   margin-right: 16px;
 }
 
+.nav-item .saldo-conta:hover{
+  color:#fff
+}
+
 .nav-item a {
-  text-decoration: none; /* Remove o sublinhado */
-  color: #aaa; /* Define a cor dos links */
+  text-decoration: none; 
+  color: #aaa; 
 }
 
 .nav-item a:hover {
-  color: #fff; /* Cor ao passar o mouse */
+  color: #fff; 
 }
-
 
 /*======================================================================
 Hero 
@@ -373,12 +392,17 @@ Hero
   color: #fff;
   padding: 100px 0;
   font-family: 'Poppins', sans-serif;
-  display: block;
+  display: block ;
   justify-content: center; 
   align-items: center;     
   text-align: center;      
   height: auto;
-  width: 100%;           
+  width: 100%;  
+  height: 0vh;       
+}
+
+.main{
+  display: block;
 }
 
 .hero-text h1 {
@@ -414,13 +438,14 @@ Hero
   background-color: #aaa;
 }
 
+/*======================================================================
+Event Cards
+======================================================================*/
 
-
-
-
-
-.available-events {
-  margin-top: 40px;
+.col-md-4 {
+  max-width: 30%; /* Ajuste conforme necessário */
+  flex: 0 0 30%; /* 3 colunas */
+  box-sizing: border-box;
 }
 
 .event-card {
@@ -431,7 +456,7 @@ Hero
   background-color: #333;
   border: none;
   color: #fff;
-  height: 300px;
+  height: 250px;
 
 }
 
@@ -445,67 +470,75 @@ Hero
   color: #bbb;
 }
 
-
+/*======================================================================
+Modal
+======================================================================*/
 
 .modal-content {
-  background-color: #1a1a1a; /* Cor de fundo escura */
-  border-radius: 12px; /* Bordas arredondadas */
-  border: none; /* Sem borda */
-  color: #fff; /* Texto branco */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra */
+  background-color: #1a1a1a; 
+  border-radius: 12px; 
+  border: none; 
+  color: #fff; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
 }
+
+/*======================================================================
+Input Containers
+======================================================================*/
 
 .input-container i {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #aaa; /* Cor do ícone dentro do campo */
+  color: #aaa; 
 }
 
 .input-container input,
 .input-container select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #444; /* Borda escura */
-  border-radius: 8px; /* Bordas arredondadas */
-  background-color: #2c2c2c; /* Fundo escuro */
-  color: #ddd; /* Texto claro */
+  border: 1px solid #444; 
+  border-radius: 8px;
+  background-color: #2c2c2c; 
+  color: #ddd; 
 }
 
-/* Estilo ao focar no campo de entrada */
 .input-container input:focus,
 .input-container select:focus {
   outline: none;
-  border-color: #00aaff; /* Destaque azul ao focar */
-  background-color: #2c2c2c; /* Manter o fundo escuro ao focar */
-  color: #ddd; /* Manter a cor clara do texto ao focar */
-  box-shadow: 0 0 5px rgba(0, 170, 255, 0.5); /* Sombra azul ao focar */
+  border-color: #00aaff; 
+  background-color: #2c2c2c; 
+  color: #ddd; 
+  box-shadow: 0 0 5px rgba(0, 170, 255, 0.5); 
 }
 
 .input-container i {
   position: absolute;
-  right: 10px; /* Alinhado à direita do campo */
+  right: 10px; 
   top: 50%;
   
-  color: #aaa; /* Cor do ícone */
-  font-size: 18px; /* Tamanho do ícone */
+  color: #aaa; 
+  font-size: 18px; 
 }
 
 .input-container input::placeholder {
-  color: #aaa; /* Cor clara para o placeholder */
+  color: #aaa; 
 }
+
+/*======================================================================
+Available Events
+======================================================================*/
 
 .available-events {
   display: flex;
-  flex-direction: column; /* Alinha os elementos na vertical */
-  align-items: center; /* Centraliza os itens no centro */
+  flex-direction: column; 
+  align-items: center; 
 }
-
 
 .available-events .populares,
 .available-events .vencimento {
-  margin-top: 10px; /* Espaçamento entre o título e os cards */
+  margin-top: 10px; 
 }
 
 .available-events h2 {
@@ -514,17 +547,17 @@ Hero
   margin-bottom: 10px; /* Espaçamento entre os títulos */
 }
 
-
-
 .populares, .vencimento {
   display: flex;
-  flex-wrap: wrap; /* Permite que os cards fiquem responsivos */
-  gap: 20px; /* Espaçamento entre os cards */
-  justify-content: center; /* Centraliza os cards */
+  flex-wrap: wrap; 
+  gap: 20px; 
+  justify-content: center; 
 }
 
+/*======================================================================
+Account Section
+======================================================================*/
 
-/* Container principal */
 .user-container {
   display: flex;
   gap: 50px;
@@ -534,9 +567,9 @@ Hero
   border-radius: 20px;
   padding: 40px;
   width: 100%;
-  max-width: 1200px; /* Limita o tamanho em telas grandes */
-  margin: 0 auto; /* Centraliza na tela */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Adiciona profundidade */
+  max-width: 1200px; 
+  margin: 0 auto; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); 
 }
 
 .user-container p{
@@ -548,37 +581,33 @@ Hero
 }
 
 .container {
-  background-color: #111; /* Fundo preto */
-  width: 80%; /* Aumentar largura */
-  min-height: 500px; /* Aumentar altura */
-  margin: 50px auto; /* Centralizar */
+  background-color: #111; 
+  width: 80%; 
+  min-height: 500px; 
+  margin: 50px auto; 
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
 }
 
-/* Informações do usuário */
 .user-info,
 .transaction-history {
   flex: 1;
   color: var(--default-color);
 }
 
-/* Cabeçalhos */
 .user-info h2,
 .transaction-history h2 {
   font-size: 28px;
   margin-bottom: 20px;
 }
 
-/* Textos */
 .user-info p,
 .transaction-history p {
   font-size: 20px;
   margin-bottom: 12px;
 }
 
-/* Ajustes para responsividade */
 @media (max-width: 768px) {
   .user-container {
     flex-direction: column;
@@ -587,16 +616,19 @@ Hero
   }
 }
 
+/*======================================================================
+Histórico de transação
+======================================================================*/
+
 .scrollable {
-  max-height: 300px; /* Define altura fixa da parte scrollável */
-  overflow-y: auto; /* Ativa a rolagem vertical */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda para destacar */
+  max-height: 300px; 
+  overflow-y: auto; 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.05); /* Fundo levemente destacado */
+  background-color: rgba(255, 255, 255, 0.05); 
   border-radius: 5px;
 }
 
-/* Estilo para barra de rolagem */
 .scrollable::-webkit-scrollbar {
   width: 8px;
 }
@@ -610,15 +642,6 @@ Hero
   background: rgba(255, 255, 255, 0.1);
 }
 
-/*.body-itens{
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}*/
-
 .row.align-items-center {
   display: flex;
   justify-content: center;
@@ -627,23 +650,97 @@ Hero
   flex-direction: column;
 }
 
-events.section {
-  
-    margin: 0;
-    background-color: transparent;
-    color: #fff;
-    padding: 100px 0;
-    font-family: 'Poppins', sans-serif;
-    display: block;
-    justify-content: center; 
-    align-items: center;     
-    text-align: center;      
-    height: auto;
-    width: 100%;           
-  
-.admin{
-  display: none;
+/*======================================================================
+Seção Categorias
+======================================================================*/
+
+.hero-section h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
 }
+
+.cards-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem; 
+  overflow: hidden; 
+  flex-wrap: nowrap; 
+}
+
+.card-car {
+  flex: 0 0 calc(20% - 1rem); 
+  background-color: #333;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.card-car:hover {
+  transform: translateY(-5px);
+}
+
+.img-wrapper {
+  overflow: hidden;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-control-prev {
+  left: 15rem;
+}
+
+.carousel-control-next {
+  right: 15rem; 
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1);
+}
+
+@media (max-width: 768px) {
+  .card-car {
+    flex: 0 0 calc(50% - 1rem); 
+  }
+
+  .carousel-control-prev,
+  .carousel-control-next {
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-car {
+    flex: 0 0 100%; 
+  }
+}
+
+
+
+
+
 
 
 

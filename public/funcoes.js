@@ -25,6 +25,13 @@ export async function  respostaSecao()  {
             if (nomeUserElement) {
                 nomeUserElement.textContent = `Olá, ${nome}`;
             }
+
+            if (user.ISADMIN === 1) {
+                const adminElements = document.querySelectorAll('.admin');
+                adminElements.forEach((element) => {
+                    element.style.display = 'block';
+                });
+            }
         }
 
     } catch (error) {

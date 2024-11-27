@@ -26,7 +26,7 @@ async function enviarDadosBackend(event) {
 
       }
     } catch (error) {
-      console.error("Erro na requisição de cadastro:", error);
+      console.error("Erro na requisição de adiconar fundos:", error);
     }
 }
   

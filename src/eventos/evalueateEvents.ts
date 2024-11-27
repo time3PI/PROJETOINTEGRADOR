@@ -49,7 +49,7 @@ export namespace evalueateEventsHandler {
         try {
             // Obtém o título do evento e o ID do usuário criador do evento
             const IdUserTituloEventoResult = await conn.execute<any[]>(
-                `SELECT titulo, id_usuarios_fk
+                `SELECT titulo, id_usuario_fk
                 FROM evento
                 WHERE id_evento = :idEvento`,
                 {
@@ -69,7 +69,7 @@ export namespace evalueateEventsHandler {
             const emailUserResult = await conn.execute<any[]>(
                 `SELECT email
                 FROM usuario
-                WHERE id_ususario = :idUserEvento`,
+                WHERE id_usuario = :idUserEvento`,
                 {
                     idUserEvento: idUserEvento,
                 }
@@ -153,35 +153,49 @@ export namespace evalueateEventsHandler {
     }
 
     // Manipulador de requisição HTTP para aprovação/reprovação de eventos
-    export const evaluateNewEventHandler: RequestHandler = async (req: Request, res: Response) => {
-        const pIdEvento = req.get('idEvento');
-        const pTextoReprovacao = req.get('textoReprovacao');
-        const pOpcao = req.get('opcao');
-        const isAdmin = req.session.isAdmin;  // Verifica se o usuário é um moderador
-
-
-            if (pIdEvento && pTextoReprovacao && pOpcao) {
-                if (pOpcao === 'aprovar') {
-                    // Aprova o evento
-                    const authData = await aprovarEvento(pIdEvento);
-                    if (authData !== undefined) {
-                        res.status(200).send('Evento aprovado com sucesso!');
-                    } else {
-                        res.status(500).send('Erro ao aprovar evento');
-                    }
-                } else if (pOpcao === 'reprovar') {
-                    // Reprova o evento e envia e-mail de notificação
-                    const authData = await reprovarEvento(pIdEvento, pTextoReprovacao);
-                    if (authData === true) {
-                        res.status(200).send('Evento reprovado com sucesso!');
-                    } else {
-                        res.status(500).send('Erro ao reprovar evento');
-                    }
+    export const evalueateEventsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const { opcao, idEvento, textoReprovacao } = req.body;
+            const isAdmin = req.session.isAdmin; // Verifica se o usuário é moderador
+    
+            if (!isAdmin) {
+                res.status(403).send('Acesso negado. Apenas moderadores podem avaliar eventos.');
+                return;
+            }
+    
+            if (!idEvento || !opcao) {
+                res.status(400).send('Faltando parâmetros obrigatórios.');
+                return;
+            }
+    
+            if (opcao === 'aprovar') {
+                const authData = await aprovarEvento(idEvento);
+                if (authData) {
+                    res.status(200).send('Evento aprovado com sucesso!');
                 } else {
-                    res.status(400).send('Opção inválida!');
+                    console.error(`Erro ao aprovar evento com id ${idEvento}`);
+                    res.status(500).send('Erro ao aprovar evento');
+                }
+            } else if (opcao === 'reprovar') {
+                if (!textoReprovacao) {
+                    res.status(400).send('Texto de reprovação é obrigatório.');
+                    return;
+                }
+    
+                const authData = await reprovarEvento(idEvento, textoReprovacao);
+                if (authData) {
+                    res.status(200).send('Evento reprovado com sucesso!');
+                } else {
+                    console.error(`Erro ao reprovar evento com id ${idEvento}`);
+                    res.status(500).send('Erro ao reprovar evento');
                 }
             } else {
-                res.status(400).send('Faltando parâmetros');
+                res.status(400).send('Opção inválida.');
             }
+        } catch (err) {
+            console.error('Erro inesperado ao avaliar evento:', err);
+            res.status(500).send('Erro interno do servidor.');
+        }
     }
+    
 }

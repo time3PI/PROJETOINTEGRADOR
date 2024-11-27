@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', () => {respostaSecao();});
 async function enviarDadosBackend() {
     const titulo = document.getElementById("titulo").value;
     const desc = document.getElementById("desc").value;
@@ -6,6 +7,7 @@ async function enviarDadosBackend() {
     const horaInicioApostas = document.getElementById("horaInicioApostas").value;
     const dataFimApostas = document.getElementById("dataFimApostas").value;
     const horaFimApostas = document.getElementById("horaFimApostas").value;
+    const categoria = document.getElementById("filterDropdown").value;
 
     try {
       const response = await fetch("http://localhost:3000/addNewEvent", {
@@ -13,12 +15,13 @@ async function enviarDadosBackend() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ titulo, desc, dataInicio, dataInicioApostas, horaInicioApostas, dataFimApostas, horaFimApostas })
+        body: JSON.stringify({ titulo, desc, dataInicio, dataInicioApostas, horaInicioApostas, dataFimApostas, horaFimApostas, categoria })
 
       });
   
-      if (response.ok) { 
+      if (response.ok) {
         const successMessage  = await response.text();
+        alert(successMessage);
         alert(successMessage);
         // Redireciona para a página inicial do usuário
       } else {

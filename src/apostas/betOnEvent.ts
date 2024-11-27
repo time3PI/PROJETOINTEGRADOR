@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response } from "express";
 import { conexaoBD} from "../conexaoBD";
 import { tokenParaId } from "../funcoes";
 import { Connection } from "oracledb";
+import { registrarTransacao } from "../carteira/transacoes";
 
 // Define um namespace para o manipulador de apostas em eventos
 export namespace betOnEventHandler {
@@ -14,12 +15,12 @@ export namespace betOnEventHandler {
             const result = await conn.execute<any[]>(
                 `SELECT valor_total
                 FROM carteira
-                WHERE id = :idCarteira`,
+                WHERE id_usuario_fk = :idCarteira`,
                 { idCarteira: idCarteira }
             );
 
             const rows = result.rows?.[0]?.[0]; // Obtém o valor total da carteira
-
+            console.log(result) 
             // Verifica se a carteira possui saldo suficiente para a aposta
             if (rows < quant_cotas) {
                 console.log("Você nao possui saldo para apostar.");
@@ -30,12 +31,13 @@ export namespace betOnEventHandler {
             await conn.execute(
                 `UPDATE carteira
                 SET valor_total = valor_total - :quant_cotas
-                WHERE id = :idCarteira`,
+                WHERE id_usuario_fk = :idCarteira`,
                 {
                     quant_cotas: quant_cotas,
                     idCarteira: idCarteira
                 }
             );
+            
 
             await conn.commit(); // Confirma a transação
             return true;
@@ -69,22 +71,6 @@ export namespace betOnEventHandler {
                 return false;
             }
 
-            // Verifica o status do evento para garantir que ele está "aprovado" antes de permitir apostas
-            const pStatusEvento = await conn.execute<any[]>(
-                `SELECT status
-                FROM evento
-                WHERE id_evento = :idEvento`,
-                { idEvento: idEvento }
-            );
-
-            const statusEvento = pStatusEvento.rows?.[0]?.[0]; // Obtém o status do evento
-
-            // Verifica se o evento está aprovado; caso contrário, a aposta não é permitida
-            if (statusEvento !== 'aprovado') {
-                console.error("Evento não aprovado!");
-                return false;
-            }
-
             // Insere a nova aposta na tabela `apostas`
             await conn.execute(
                 `INSERT INTO aposta (id_usuario_fk, id_evento_fk, quant_cotas, palpite) 
@@ -101,8 +87,16 @@ export namespace betOnEventHandler {
             const valorApostado = await retiraValorCarteira(idUser, quantCotas, conn);
 
             if (valorApostado === true) {
-                await conn.commit(); // Confirma a transação se tudo ocorrer bem
-                return true;
+                const tipo = 'apostado';
+                const transacaoRegistrada = await registrarTransacao(idUser, quantCotas, conn, tipo);
+                // Se a transação foi registrada com sucesso, confirma as alterações
+                if (transacaoRegistrada) {
+                    await conn.commit();
+                    return true;
+                } else {
+                    console.error('Carteira não encontrada ou falha ao registrar a transação.');
+                    return false;
+            }
             } else {
                 console.error('Carteira não encontrada ou falha ao registrar a transação.');
                 return false;
@@ -123,20 +117,24 @@ export namespace betOnEventHandler {
     export const betOnEventHandler: RequestHandler = async (req: Request, res: Response) => {
 
         // Obtém os parâmetros da requisição HTTP
-        const pQuantCotas = req.get('quantCotas');
-        const pIdEvento = req.get('idEvento');
-        const pPalpite = req.get('palpite');
+        const { quantCotas, idEvento, palpite } = req.body;
         const token = req.session.token; // Obtém o token da sessão do usuário
-
+        const isAdmin = req.session.isAdmin;
+        
         // Verifica se o usuário está autenticado
         if (!token) {
             res.status(400).send("Necessário realizar Login para esta ação");
             return;
         }
 
+        if (isAdmin) {
+            res.status(400).send("Um administrador não pode realizar esta ação");
+            return;
+        }
+
         // Verifica se todos os parâmetros necessários estão presentes
-        if (pQuantCotas && pIdEvento && pPalpite) {
-            const authData = await realizarAposta(token, pQuantCotas, pIdEvento, pPalpite);
+        if (quantCotas && idEvento && palpite) {
+            const authData = await realizarAposta(token, quantCotas, idEvento, palpite);
 
             // Se a aposta for bem-sucedida, envia uma resposta de sucesso
             if (authData !== undefined && authData !== false) {

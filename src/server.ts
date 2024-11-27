@@ -63,7 +63,7 @@ routes.post('/logOut', logOutHandler.logOutHandler);
 routes.post('/addNewEvent', addEventsHandler.addNewEventHandler);
 routes.get('/getEvents', getEventsHandler.getEventsHandler);
 routes.put('/deleteEvent', deleteEventsHandler.deleteEventHandler);
-routes.put('/evaluateNewEvent', evalueateEventsHandler.evaluateNewEventHandler);
+routes.put('/evaluateNewEvent', evalueateEventsHandler.evalueateEventsHandler);
 routes.get('/searchEvent', searchEventHandler.searchEventHandler);
 routes.put('/finishEvent', finishEventHandler.finishEventHandler);
 

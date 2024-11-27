@@ -35,6 +35,7 @@ export namespace checkSessionHandler {
                 { token }
             );
             // Verifica se as linhas existem e converte para o tipo esperado
+            // console.log(result.rows);
             const rows = result.rows;
             if (rows && rows.length > 0) {
                 const [id, nome, email, isAdmin, valor_total] = rows[0] as [
@@ -44,7 +45,7 @@ export namespace checkSessionHandler {
                     number,
                     number
                 ];
-                return { ID: id, NOME: nome, EMAIL: email, VALOR_TOTAL: valor_total, ID_CARTEIRA: id, ISADMIN: isAdmin };                
+                return { ID: id, NOME: nome, EMAIL: email, ISADMIN: isAdmin, VALOR_TOTAL: valor_total, ID_CARTEIRA: id  };                
             }
 
             return undefined;

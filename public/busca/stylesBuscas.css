@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Poppins, sans-serif;
+    background: url('img/background.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.navbar-logo {
+    width: 40px;
+    height: auto; 
+}
+
+.content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.table-container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    width: 80%;
+    max-width: 900px;
+    margin-top: 20px; /* Ajuste a posição da tabela */
+}
+
+.filter-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-container input[type="text"] {
+    font-size: 15px;
+    padding: 10px;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+
+.filter-container select {
+    padding: 10px;
+    font-size: 15px;
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 5px;
+}
+
+.grid-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card-item {
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+}
+
+.card-item h5 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card-item p {
+    margin-bottom: 15px;
+}
+
+.card-item button {
+    padding: 8px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #04D2D3, #7e5ac8);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.pagination-container {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+margin-top: 20px;
+}
+
+
+.card-item button:hover {
+    background: linear-gradient(to left, #04D2D3, #7e5ac8);
+}

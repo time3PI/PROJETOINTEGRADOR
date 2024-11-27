@@ -1,0 +1,295 @@
+ /* Estilo Global */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Botões com gradiente */
+.btn-gradient {
+padding: 10px 20px;
+background: linear-gradient(to right, #04D2D3, #7e5ac8);
+color: #fff;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+z-index: 1;
+transition: background-position 0.4s ease; /* Transição suave do gradiente */
+background-size: 200%; /* Aumenta a área do gradiente para o efeito de movimento */
+background-position: left; /* Posição inicial do gradiente */
+}
+
+/* Efeito ao passar o mouse */
+.btn-gradient:hover {
+background-position: right; /* Move o gradiente para a direita */
+}
+
+
+
+
+body {
+    font-family: Poppins, sans-serif;
+    background: url('img/background.png') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo Global */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+/* Botões com gradiente */
+.btn-gradient {
+padding: 10px 20px;
+background: linear-gradient(to right, #04D2D3, #7e5ac8);
+color: #fff;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+z-index: 1;
+transition: background-position 0.4s ease; /* Transição suave do gradiente */
+background-size: 200%; /* Aumenta a área do gradiente para o efeito de movimento */
+background-position: left; /* Posição inicial do gradiente */
+}
+
+/* Efeito ao passar o mouse */
+.btn-gradient:hover {
+background-position: right; /* Move o gradiente para a direita */
+}
+body {
+font-family: Poppins, sans-serif;
+background: url('img/background.png') no-repeat center center fixed;
+background-size: cover;
+height: 100vh;
+display: flex;
+flex-direction: column;
+}
+
+/* Título das seções */
+.section-title {
+font-size: 2rem; /* Tamanho do texto grande */
+font-weight: bold; /* Texto em negrito */
+text-align: center; /* Centraliza o texto */
+margin-bottom: 20px; /* Espaço entre o título e os cards */
+color: white; /* Cor branca para o texto */
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Efeito de sombra para destaque */
+}
+
+/* Navbar */
+.navbar {
+background-color: #111;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px 20px;
+color: white;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.navbar .logo {
+display: flex;
+align-items: center;
+}
+
+.navbar .logo img {
+height: 40px;
+margin-right: 10px;
+}
+
+.navbar .logo span {
+font-size: 20px;
+font-weight: bold;
+color: white;
+}
+
+.navbar .nav-buttons {
+display: flex;
+gap: 10px;
+}
+
+.navbar .nav-buttons button {
+background: linear-gradient(to right, #04D2D3, #7e5ac8);
+color: white;
+border: none;
+padding: 10px 15px;
+border-radius: 5px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.navbar .nav-buttons button:hover {
+background: linear-gradient(to left, #04D2D3, #7e5ac8);
+}
+
+/* Container Principal */
+.content-container {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-start;
+width: 100%;
+}
+
+/* Container da Tabela */
+.table-container {
+background: rgba(0, 0, 0, 0.8);
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+width: 80%;
+max-width: 900px;
+margin-top: 20px;
+}
+
+/* Grid para os Cards */
+.grid-table {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 15px;
+margin-top: 20px;
+}
+
+/* Estilo dos Cards */
+.card-item {
+background: rgba(0, 0, 0, 0.9);
+border-radius: 10px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+color: #fff;
+padding: 15px;
+text-align: center;
+}
+
+/* Notificação */
+.notification {
+position: fixed;
+top: 80px;
+right: 20px;
+background: #28a745;
+color: #fff;
+padding: 10px 20px;
+border-radius: 5px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+z-index: 1000;
+display: none;
+}
+
+/* Estilo da Paginação */
+.pagination-container {
+margin-top: 20px;
+display: flex;
+justify-content: center;
+width: 100%;
+}
+
+.pagination .page-item .page-link {
+padding: 10px 20px;
+background: linear-gradient(to right, #04D2D3, #7e5ac8);
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-position 0.4s ease;
+background-size: 200%;
+background-position: left;
+}
+
+.pagination .page-item .page-link:hover {
+background-position: right;
+}
+
+.pagination .page-item.disabled .page-link {
+background: #444;
+cursor: not-allowed;
+}
+
+.pagination .page-item.active .page-link {
+background: #444;
+color: white;
+}
+
+.pagination .page-item {
+margin: 0 5px; /* Adicionando espaçamento entre os botões de navegação */
+}
+
+/* Estilo para o campo de busca */
+#filter {
+background: rgba(0, 0, 0, 0.7); /* Fundo escuro */
+color: white; /* Texto branco */
+border: none;
+border-radius: 5px;
+padding: 10px 20px;
+margin-right: 20px; /* Espaço à direita */
+width: 200px; /* Tamanho fixo */
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#filter:focus {
+outline: none; /* Remove o contorno padrão */
+background-color: rgba(0, 0, 0, 0.8); /* Cor mais escura ao focar */
+border: 2px solid #04D2D3; /* Borda azul clara ao focar */
+}
+
+/* Estilo para a seleção de categoria */
+#category-select {
+background: rgba(0, 0, 0, 0.7); /* Fundo escuro */
+color: white; /* Texto branco */
+border: none;
+border-radius: 5px;
+padding: 10px 20px;
+width: 200px; /* Tamanho fixo */
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#category-select:focus {
+outline: none; /* Remove o contorno padrão */
+background-color: rgba(0, 0, 0, 0.8); /* Cor mais escura ao focar */
+border: 2px solid #04D2D3; /* Borda azul clara ao focar */
+}
+
+/* Ajustes para garantir que os campos de filtro preencham mais espaço */
+.filter-container input,
+.filter-container select {
+width: 48%; /* Ajusta a largura para preencher mais espaço */
+}
+
+/* Layout da container de filtros */
+.filter-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px; /* Espaço entre o filtro e os cards */
+gap: 10px; /* Adiciona um pequeno espaçamento entre os elementos */
+}
+
+/* Ajuste no layout dos cards */
+.grid-table {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 15px;
+margin-top: 20px; /* Espaço entre o filtro e os cards */
+}
+
+/* Ajustes gerais */
+.table-container {
+background: rgba(0, 0, 0, 0.8);
+border-radius: 10px;
+padding: 20px;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+width: 80%;
+max-width: 900px;
+/* Remover o margin-top para não distanciar o filtro */
+}
+
+
+
+

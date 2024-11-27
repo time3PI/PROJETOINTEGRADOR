@@ -5,53 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="stylesBucas.css">
+    <link rel="stylesheet" href="stylesBuscas.css">
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     <!-- Navbar com opções clicáveis -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary" >
         <div class="container-fluid">
-            <img src="../img/logo.png" alt="Logo" class="brand-logo">
-            <a class="navbar-brand" href="#">SkyBet</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <img src="../img/logo.png" alt="Logo" class="brand-logo">
+          <a class="navbar-brand" href="../home/index.html">SkyBet</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
-                  <li class="nav-item saldo-item">
-                    <a href="busca.html">
-                      <i class="bi bi-search icon-right"></i>
-                      <span class="saldo-conta">Buscar evento</span>
-                    </a>
-                  </li>
+              <li class="nav-item admin">
+                <a href="../admin/admin.html">
+                    <span class="saldo-conta">Admin</span>
+                </a>
+              </li>
 
-                  <li class="nav-item">
-                    <a href="../newEvent/newEvent.html">
-                      
-                      <span class="saldo-conta">Add Event</span>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="../account/account.html">
-                      <i class="bi bi-wallet2 icon-right"></i>
-                      <span class="saldo-conta valor-conta">R$ 150,00</span>
-                    </a>
-                  </li>
-
-                  <li class="nav-item">
-                    <a href="../account/account.html">
-                      <i class="bi bi-person-circle icon-right"></i>
-                      <span class="saldo-conta nome-user">Olá, User</span>
-                    </a>
-                  </li>
-
-                </ul>
+              <li class="nav-item saldo-item">
+                <a href="../busca/busca.html">
+                  <i class="bi bi-search icon-right"></i>
+                    <span class="saldo-conta">Buscar evento</span>
+                </a>
+              </li>
+    
+              <li class="nav-item">
+                <a href="../newEvent/newEvent.html">
+                  <i class="bi bi-bookmark-plus"></i>
+                  <span class="saldo-conta">Add Event</span>
+                </a>
+              </li>
+    
+              <li class="nav-item">
+                <a href="../account/account.html">
+                  <i class="bi bi-wallet2 icon-right"></i>
+                  <span class="saldo-conta valor-conta">R$ 150,00</span>
+                </a>
+              </li>
+    
+              <li class="nav-item">
+                <a href="../account/account.html">
+                  <i class="bi bi-person-circle icon-right"></i>
+                  <span class="saldo-conta nome-user">Olá, User</span>
+                </a>
+              </li>
+    
+            </ul>
           </div>
         </div>
-    </nav>
+      </nav>
     <br><br><br><br><br><br>
     <!-- Conteúdo Principal -->
     <div class="content-container">
@@ -59,96 +65,23 @@
             <!-- Filtro e Seletor -->
             <div class="filter-container">
                 <input type="text" id="filter" class="form-control" placeholder="Digite para filtrar...">
-    <select id="category-select" class="form-select">
-        <option value="" selected>Selecione uma categoria</option>
-        <option value="categoria1">olimpíada</option>
-        <option value="categoria2">catástrofes</option>
-        <option value="categoria3">eleições</option>
-        <option value="categoria3">bolsa de valores</option>
-        <option value="categoria3">futebol</option>
-        <option value="categoria3">clima</option>
-        <option value="categoria3">outros</option>
-    </select>
+                <select id="category-select" class="form-select">
+                    <option value="11" selected>Selecione uma categoria</option>
+                    <option value="10">meus eventos</option>
+                    <option value="3">olimpíada</option>
+                    <option value="4">catástrofes</option>
+                    <option value="5">eleições</option>
+                    <option value="6">bolsa de valores</option>
+                    <option value="7">futebol</option>
+                    <option value="8">clima</option>
+                    <option value="9">outros</option>
+                </select>
 
             </div>
 
             <!-- Tabela em formato de "Quadradinhos" -->
             <div class="grid-table" id="grid-table">
-                <div class="card-item" data-category="categoria1">
-                    <h5>titulo: gordao morreu</h5>
-                    <p>Descrição: tomara</p>
-                    <p>Categoria 1</p>
-                    <button>Apostar</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>titulo: </h5>
-                    <p>Descrição: sim</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria3">
-                    <h5>id: #3</h5>
-                    <p>Evento: cecilia</p>
-                    <p>Descrição: diva</p>
-                    <p>Categoria 3</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
-                <div class="card-item" data-category="categoria2">
-                    <h5>id: #3</h5>
-                    <p>Evento: teste</p>
-                    <p>Descrição: +1 row</p>
-                    <p>Categoria 2</p>
-                    <button>Botão</button>
-                </div>
+                 <!-- eventos ficam aki -->
             </div>
         </div>
         <div class="pagination-container">
@@ -158,6 +91,39 @@
         </div>
         
     </div>
+
+     <!-- Modal -->
+    <div class="modal fade" id="betModal" tabindex="-1" aria-labelledby="betModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="betModalLabel">Faça sua Aposta</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="betForm">
+                <div class="mb-3">
+                  <label for="betValue" class="form-label">Valor da Aposta</label>
+                  <input type="number" class="form-control" id="betValue" min="1" placeholder="Digite o valor" required>
+                </div>
+                <div class="mb-3">
+                  <label for="betChoice" class="form-label">Seu Palpite</label>
+                  <select class="form-select" id="betChoice" required>
+                    <option value="" selected disabled>Escolha uma opção</option>
+                    <option value="1">Sim</option>
+                    <option value="0">Não</option>
+                  </select>
+                </div>
+                <input type="hidden" id="eventId" value="">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="confirmBet">Confirmar Aposta</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <script type="module" src ="busca.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

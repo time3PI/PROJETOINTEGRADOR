@@ -1,11 +1,13 @@
 import { Request, RequestHandler, Response } from "express";
 import { conexaoBD } from "../conexaoBD";
+import { tokenParaId } from "../funcoes";
+
 
 // Define um namespace para o manipulador de eventos
 export namespace getEventsHandler {
 
     // Função assíncrona que filtra eventos com base no parâmetro 'filtro' fornecido pelo usuário
-    async function filtrarEventos(filtro: string): Promise<any | undefined> {
+    async function filtrarEventos(filtro: string, token: string): Promise<any | undefined> {
         let conn = await conexaoBD();  // Estabelece conexão com o banco de dados
 
         if (!conn) {
@@ -64,12 +66,13 @@ export namespace getEventsHandler {
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
 
+            //AQUI COMEÇA OS FILTROS DE EVENTOS
+
             } else if (filtro === '3') {
-                // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
                 const result = await conn.execute(
                     `SELECT *
                     FROM evento
-                    WHERE SYSDATE < data_hora_inicio_apostas
+                    WHERE categoria = 'olimpíada'
                     AND status = 'aprovado'`
                     
                 );
@@ -77,21 +80,113 @@ export namespace getEventsHandler {
                 return linhas;
 
             } else if (filtro === '4') {
-                // Eventos com status 'finalizado'
                 const result = await conn.execute(
                     `SELECT *
                     FROM evento
-                    WHERE status = 'finalizado'`
+                    WHERE categoria = 'catástrofes'
+                    AND status = 'aprovado'`
+                    
                 );
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
 
             } else if (filtro === '5') {
-                // Todos os eventos, independentemente do status
                 const result = await conn.execute(
                     `SELECT *
-                    FROM evento`
+                    FROM evento
+                    WHERE categoria = 'eleições'
+                    AND status = 'aprovado'`
+                    
                 );
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            }  else if (filtro === '6') {
+                // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
+                const result = await conn.execute(
+                    `SELECT *
+                    FROM evento
+                    WHERE categoria = 'bolsa de valores'
+                    AND status = 'aprovado'`
+                    
+                );
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            }  else if (filtro === '7') {
+                // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
+                const result = await conn.execute(
+                    `SELECT *
+                    FROM evento
+                    WHERE categoria = 'futebol'
+                    AND status = 'aprovado'`
+                    
+                );
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            }  else if (filtro === '8') {
+                // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
+                const result = await conn.execute(
+                    `SELECT *
+                    FROM evento
+                    WHERE categoria = 'clima'
+                    AND status = 'aprovado'`
+                    
+                );
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            } else if (filtro === '9') {
+                // Eventos com status 'aprovado' e cuja data de apostas não foi atingida
+                const result = await conn.execute(
+                    `SELECT *
+                    FROM evento
+                    WHERE categoria = 'outros'
+                    AND status = 'aprovado'`
+                    
+                );
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            } else if (filtro === '10') {
+
+                const idUser = tokenParaId(token, conn);
+
+                const result = await conn.execute<any>(
+                    `SELECT *
+                    FROM evento
+                    WHERE id_usuario_fk = :idUser
+                    AND (status = 'aguarda aprovação' OR status = 'aprovado')
+                    order by id_evento`,
+                    { idUser: { val: idUser } }
+                );
+                // console.dir(result.rows, {depth: null});
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+
+            } else if (filtro === '11') {
+
+                const result = await conn.execute<any>(
+                    `SELECT *
+                    FROM evento
+                    WHERE status = 'aprovado'
+                    order by id_evento` 
+                );
+                // console.dir(result.rows, {depth: null});
+                const linhas: any[] | undefined = result.rows;
+                return linhas;
+                
+
+            } else if (filtro === '12') {
+
+                const result = await conn.execute<any>(
+                    `SELECT *
+                    FROM evento
+                    WHERE status = 'aguarda aprovação'
+                    order by data_inicio DESC` 
+                );
+                // console.dir(result.rows, {depth: null});
                 const linhas: any[] | undefined = result.rows;
                 return linhas;
 
@@ -114,18 +209,9 @@ export namespace getEventsHandler {
         const { pFiltro }  = req.query;  // Obtém o filtro da requisição
 
         const filtro = pFiltro as string;
-
-
-        /*  Opções de filtro:
-            1 - evento populares
-            2 - Evento proximos do vencimento
-            3 - Evento futuro
-            4 - Evento finalizado
-            5 - todos Eventos
-        */
-
-        if (filtro) {
-            const authData = await filtrarEventos(filtro);  // Filtra eventos com base no filtro fornecido
+        const token = req.session.token;
+        if (filtro && token) {
+            const authData = await filtrarEventos(filtro, token);  // Filtra eventos com base no filtro fornecido
             if (authData !== undefined) {
                 res.status(200).send({ authData });  // Retorna os eventos filtrados em formato JSON
             } else {

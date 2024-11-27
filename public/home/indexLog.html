@@ -18,13 +18,20 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary" >
     <div class="container-fluid">
       <img src="../img/logo.png" alt="Logo" class="brand-logo">
-      <a class="navbar-brand" href="#">SkyBet</a>
+      <a class="navbar-brand" href="../home/index.html">SkyBet</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item saldo-item">
+
+          <li class="nav-item admin">
+            <a href="../admin/admin.html">
+                <span class="saldo-conta">Admin</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="../busca/busca.html">
               <i class="bi bi-search icon-right"></i>
                 <span class="saldo-conta">Buscar evento</span>
@@ -33,6 +40,7 @@
 
           <li class="nav-item">
             <a href="../newEvent/newEvent.html">
+              <i class="bi bi-bookmark-plus"></i>
               <span class="saldo-conta">Add Event</span>
             </a>
           </li>
@@ -55,24 +63,24 @@
       </div>
     </div>
   </nav>
-    
-  <section class="hero-section">
-    <div class="row align-items-center">
-      <div class="hero-text">
-        <p class="partner-text">UMA NOVA MANEIRA DE APOSTAR NO ESPORTE</p>
-        <h1>Aposte com Confiança. Ganhe com Estratégia.</h1>
-        <p>As melhores odds, as maiores emoções.</p>
-        <a href="../login/login.html" class="btn btn-danger">COMECE AGORA</a>
+  <main>
+    <section class="hero-section">
+      <div class="row align-items-center">
+        <div class="hero-text">
+          <p class="partner-text">UMA NOVA MANEIRA DE APOSTAR NO ESPORTE</p>
+          <h1>Aposte com Confiança. Ganhe com Estratégia.</h1>
+          <p>As melhores odds, as maiores emoções.</p>
+          <a href="../addFunds/addFunds.html" class="btn btn-danger">DEPOSITE AGORA</a>
+        </div>
       </div>
-    </div>
-  </section>
-
+    </section>
+    
     <section class="hero-section">
       <div class="available-events">
         <h2>Eventos Mais Populares!</h2>
           <div class="populares">
             <!-- Cards de eventos populares aparecerão aqui -->
-          </div>
+        </div>
       </div>
       <div class="available-events">
         <h2>Eventos Próximos do Vencimento!</h2>
@@ -81,7 +89,96 @@
           </div>
       </div>
     </section>
+    
 
+    <!-- Carrossel de Cards -->
+    <section class="hero-section">
+      <h2>Navegue por categoria</h2>
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Slide 1 -->
+          <div class="carousel-item active">
+            <div class="cards-wrapper">
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/olimpiadas.jpg" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Olimpíadas</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/catastrofes.jpg" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Catástrofes</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/eleicoes.jpg" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Eleições</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Slide 2 -->
+          <div class="carousel-item">
+            <div class="cards-wrapper">
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/bolsadevalores.jpg" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Bolsa de Valores</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/futebol.jpg" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Futebol</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+              <div class="card-car">
+                <div class="img-wrapper">
+                  <img src="../img/clima.png" class="card-img-top" alt="...">
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Clima</h5>
+                  <p class="card-text">Texto de exemplo rápido para complementar o título.</p>
+                  <a href="#" class="btn btn-primary">Saiba mais</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Controles -->
+        <button class="carousel-control-prev custom-prev-btn" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next custom-next-btn" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </section>
+    </main>
+    
+    
 
     <div class="modal fade" id="apostarModal" tabindex="-1" aria-labelledby="apostarModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -102,5 +199,6 @@
       </div>
     </div>
     <script  type="module" src="indexlog.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

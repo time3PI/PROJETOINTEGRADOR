@@ -17,7 +17,6 @@ export namespace deleteEventsHandler {
         try {
             // Obtém o ID do usuário associado ao token
             const idUser = await tokenParaId(token, conn);
-
             // Atualiza o status do evento para 'suspenso' apenas se o evento estiver em "aguarda aprovação" e pertencer ao usuário autenticado
             await conn.execute(
                 `UPDATE evento
@@ -48,7 +47,7 @@ export namespace deleteEventsHandler {
 
     // Função que lida com a requisição HTTP para deletar um evento
     export const deleteEventHandler: RequestHandler = async (req: Request, res: Response) => {
-        const pIdEvento = req.get('idEvento');  // Obtém o ID do evento a ser deletado a partir do cabeçalho da requisição
+        let { pIdEvento } = req.query;  // Obtém o ID do evento a ser deletado a partir do cabeçalho da requisição
         const token = req.session.token;  // Obtém o token do usuário da sessão
 
         // Verifica se o usuário está autenticado (possui token)
@@ -56,7 +55,7 @@ export namespace deleteEventsHandler {
             res.status(400).send("Necessário realizar login para esta ação");
             return;
         }
-
+        pIdEvento = String(pIdEvento);
         // Verifica se o ID do evento foi fornecido
         if (pIdEvento) {
             const authData = await deletarEvento(token, pIdEvento);
