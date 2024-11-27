@@ -82,7 +82,6 @@ export namespace evalueateEventsHandler {
             }
 
             const emailUser = linhas[0]?.[0];
-
             // Configura o serviço de envio de e-mail com Nodemailer
             const emissor = nodemailer.createTransport({
                 host: 'smtp.gmail.com',

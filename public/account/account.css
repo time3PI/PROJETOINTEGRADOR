@@ -1,0 +1,13 @@
+.user-info .button {
+    margin: 0 auto 20px auto;
+    display: flex;
+    width: 70%;
+    justify-content: center;
+}
+
+.user-info a {
+    text-decoration: none;
+}
+
+.user-info .logout {
+}
