@@ -44,10 +44,9 @@ Event Container
 
 .event-container {
   display: flex;
-  flex-wrap: wrap;  /* Permite que os elementos se ajustem em telas menores */
-  width: 90%;  /* Largura adaptável */
+  flex-wrap: wrap;  
+  width: 90%;  
   max-width: 900px;
-  /*height: 600px;*/
   max-height: 1100px;
   background-color: #111;
   border-radius: 10px;
@@ -443,8 +442,8 @@ Event Cards
 ======================================================================*/
 
 .col-md-4 {
-  max-width: 30%; /* Ajuste conforme necessário */
-  flex: 0 0 30%; /* 3 colunas */
+  max-width: 30%; 
+  flex: 0 0 30%; 
   box-sizing: border-box;
 }
 
@@ -456,8 +455,8 @@ Event Cards
   background-color: #333;
   border: none;
   color: #fff;
-  height: 250px;
-
+  height: 270px;
+  align-items: center;
 }
 
 .card-title {
@@ -708,15 +707,21 @@ Seção Categorias
 
 .carousel-control-prev {
   left: 15rem;
+  margin-top: 15rem;
 }
 
 .carousel-control-next {
   right: 15rem; 
+  margin-top: 15rem;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: invert(1);
+}
+
+.carousel-item {
+  margin-top: 30rem;  /* Ajuste conforme necessário */
 }
 
 @media (max-width: 768px) {
