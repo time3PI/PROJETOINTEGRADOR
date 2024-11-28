@@ -100,7 +100,6 @@ export namespace SignUpHandler {
         }
     }
 
-
     // Função que lida com a requisição HTTP de registro de um novo usuário
     export const signUpHandler: RequestHandler = async (req: Request, res: Response) => {
         
