@@ -1,6 +1,5 @@
 import OracleDB, { Connection } from "oracledb"
 
-
 export function formatarData(pData: string): string {
     if (!pData) {
         console.error("Data inválida:", pData);
