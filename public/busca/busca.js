@@ -3,7 +3,8 @@ import { respostaSecao } from "../funcoes.js";
 document.addEventListener('DOMContentLoaded', () => {
     respostaSecao();
     
-    // Função para obter o valor de um parâmetro da URL
+    // Função para obter o valor de um parâmetro da URL, que vai ser usado pra definir qual a categoria selecionada pra quando abrir essa tela
+    //Por conta disso, também precisa passar parâmetro pra seleção padrão nas outras telas que tem acesso direto (sem ser através de uma categoria específica) 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -110,13 +111,13 @@ function renderEvents(events, containerSelector) {
         container.innerHTML += cardHTML;
     });
 
-    // Atualiza cardItems após renderizar os eventos
+    // Atualiza cardItems após renderizar os eventos 
     cardItems = Array.from(container.getElementsByClassName('card-item'));
 
-    // Atualiza filteredItems após renderizar os eventos
-    filteredItems = cardItems; // Todos os itens são inicialmente filtrados
+    // Atualiza filteredItems após renderizar os eventos 
+    filteredItems = cardItems; // Todos os itens são inicialmente filtrados 
 
-    renderPage(currentPage); // Chama renderPage para exibir os itens da página
+    renderPage(currentPage); // Chama renderPage para exibir os itens da página 
 }
 
 function updateFilteredItems() {
@@ -141,8 +142,8 @@ function updateFilteredItems() {
 
 
 function renderPage(page) {
-    const start = (page - 1) * itemsPerPage;  // Índice inicial
-    const end = start + itemsPerPage;        // Índice final
+    const start = (page - 1) * itemsPerPage;  // Indice inicial
+    const end = start + itemsPerPage;      //Indice final
     
     // Exibe apenas os itens da página atual
     filteredItems.forEach((card, index) => {
@@ -243,14 +244,16 @@ document.querySelector('.grid-table').addEventListener('click', async  (event) =
                         'Content-Type': 'application/json'
                     }
                 });
-
+                
+                // Exibe a mensagem de sucesso
                 if (response.ok) {
                     const message = await response.text();
-                    alert(message); // Exibe a mensagem de sucesso
+                    alert(message); 
                     window.location.reload(); // Recarrega a página para atualizar a lista de eventos
                 } else {
+                    // Exibe a mensagem de erro
                     const errorMessage = await response.text();
-                    alert(errorMessage); // Exibe a mensagem de erro
+                    alert(errorMessage); 
                 }
             } catch (error) {
                 console.error("Erro ao deletar evento:", error);
@@ -284,10 +287,11 @@ document.getElementById('confirmBet').addEventListener('click', async () => {
             headers: {
                 'Content-Type': 'application/json'
             },
+            //enviar como string
             body: JSON.stringify({
-                quantCotas: String(quantCotas),  // Enviar como string
-                idEvento: String(idEvento),      // Enviar como string
-                palpite: String(palpite)         // Enviar como string
+                quantCotas: String(quantCotas),
+                idEvento: String(idEvento), 
+                palpite: String(palpite)     
             })
         });
 
